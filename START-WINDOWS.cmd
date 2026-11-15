@@ -6,13 +6,15 @@ if errorlevel 1 (
  pause
  exit /b 1
 )
-if not exist node_modules\playwright (
- call npm install
- if errorlevel 1 goto failed
- call npm run setup
- if errorlevel 1 goto failed
+node -e "process.exit(Number(process.versions.node.split('.')[0]) >= 24 ? 0 : 1)"
+if errorlevel 1 (
+ echo Node.js 24 or newer is required.
+ goto failed
 )
-start "" cmd /c "timeout /t 3 >nul & start http://127.0.0.1:4173"
-call npm start
+call npm install
+if errorlevel 1 goto failed
+call npm run setup
+if errorlevel 1 goto failed
+node server.cjs --open
 :failed
 pause
