@@ -13,8 +13,6 @@ if errorlevel 1 (
 )
 call npm install
 if errorlevel 1 goto failed
-call npm run setup
-if errorlevel 1 goto failed
 node server.cjs --open
 :failed
 pause

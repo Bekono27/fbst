@@ -9,7 +9,7 @@ class Engine {
   async browser() {
     if (this.context) return this.context;
     const chromium = this.chromium || require('playwright').chromium;
-    this.context = await chromium.launchPersistentContext(path.join(this.directory,'browser'), {headless:false,viewport:{width:1280,height:850}});
+    this.context = await chromium.launchPersistentContext(path.join(this.directory,'browser'), {channel:'chrome',headless:false,viewport:{width:1280,height:850}});
     this.context.on('close',()=>{this.context=null;this.page=null;});
     this.page = this.context.pages()[0] || await this.context.newPage();
     this.page.setDefaultTimeout(12000);
