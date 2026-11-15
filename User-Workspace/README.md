@@ -1,11 +1,29 @@
-# User Workspace
+# Аурант ажиллах орчин
 
-Open index.html or run npm start and visit http://127.0.0.1:4173.
+Windows дээр Node.js 24 LTS суулгаад репозиторийн үндсэн хавтас дахь START-WINDOWS.cmd файлыг ажиллуулна. Эхний удаа интернэт холболтоор Playwright болон Chromium татна.
 
-Load 200 mock users to populate four local portfolios. Use Manage to edit a display name, bio, portfolio, profile photo, and other profile details. Rehearse creation or Rehearse update to review and confirm a local change.
+Гараар ажиллуулах бол энэ хавтас дотроос дараах командыг ажиллуулна.
 
-This edition opens an empty roster and uses a fresh browser storage key. CSV import appends records and CSV export includes text fields only. Photos are stored in the current browser and origin.
+```sh
+npm install
+npm run setup
+npm start
+```
 
-For browser tests, run npm install, npx playwright install chromium, then npm test. Rehearsals use local data.
+http://127.0.0.1:4173 хаягийг нээнэ. Meta хөтөч нээх товчийг дараад нээгдсэн Chromium дотор Facebook бүртгэлээрээ нэвтэрнэ. Энэ нь таны ердийн Chrome-оос тусдаа хөтөч. Дараагийн удаа нэвтрэлтийг data/browser хавтаснаас сэргээнэ.
 
-Use Bio database to edit up to 100 reusable bios. In the profile editor, Random bio selects a different saved bio where available. Create mock Page confirms the selected profile and assigns a local mock ID. Update mock Page keeps its ID. CSV includes the mock ID. This engine runs entirely in the browser.
+Meta дээр зөв бизнесийн багцаа сонгож Manage Pages товчийг харагдуулна. Бүртгэлд багцын нэрийг яг адил бичнэ. Нэр, 3–8 үгтэй монгол танилцуулга болон тухайн хуудсанд тохирох Meta ангиллуудыг оруулна. Үүсгэх товч нь жагсаалтаас нэг ангилал сонгож маягтыг бөглөнө.
+
+Хөтчийн хувилбар, хэл болон Meta интерфэйсээс шалтгаалан автомат алхам зогсож болно. Код англи болон монгол талбарын нэрийг ашигладаг. Meta-ийн нөхцөл зөвшөөрөх, баталгаажуулалт, нэвтрэлт гарвал хөтөч дээр гүйцээнэ. Багц харагдахгүй эсвэл тохирох талбар олдохгүй үед ажиллагаа зогсоно.
+
+Үүсгэх хүсэлтийн дараа үр дүн тодорхойгүй бол Шалгах шаардлагатай төлөвт үлдэнэ. Meta дээр үүссэн хуудсаа нээгээд Дугаар татах товчийг дарна. Тухайн хуудасны нэртэй холбоос эсвэл гарчигтай URL-аас дугаар олдвол хадгална. Олдохгүй үед бодит дугаарыг Дугаар оруулах хэсэгт оруулна. Үүсээгүйг шалгасан товчийг зөвхөн Meta дээр хуудас үүсээгүйг шалгасны дараа ашиглана.
+
+Мэдээлэл data/workforce.sqlite файлд хадгалагдана. Програмыг хаагаад data хавтсыг хуулж нөөцөлнө. Энэ хавтас нэвтрэх мэдээлэл агуулдаг тул GitHub-д оруулахгүй. JSON экспорт нь хуудасны бүртгэлийг агуулна. Зураг солих болон нийтэлсэн хуудасны нэрийг Meta дээр шинэчлэх ажиллагаа энэ хувилбарт хэрэгжээгүй.
+
+GitHub-аас шинэчлэхдээ програмыг зогсоогоод үндсэн хавтаст git pull ажиллуулна. data хавтас хадгалагдана. Дараа нь npm install болон START-WINDOWS.cmd ажиллуулна.
+
+GitHub Pages хувилбар нь ажиллуулах зааврыг харуулна. Browser automation нь локал Node.js үйлчилгээгээр ажиллана.
+
+Шалгалт — npm test. Meta дээр бодит хуудас үүсгэх эцсийн шалгалтыг хэрэглэгчийн нэвтэрсэн хөтөч дээр гүйцэтгэнэ.
+
+Энэ орчинд Chromium ажиллуулахад системийн socket эрх хаалттай байсан тул браузерын төгсгөлийн шалгалт дуусаагүй. SQLite болон HTTP шалгалтууд амжилттай. Meta дээр бодит үүсгэлт батлагдаагүй.

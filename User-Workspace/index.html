@@ -1,311 +1,115 @@
-<!doctype html><html lang="mn"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Аурант ажиллах орчин</title>
+<!doctype html>
+<html lang="mn"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Аурант — Бүртгэлийн удирдлага</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#eef4ff;color:#142b50;font:15px system-ui,sans-serif}
-header{background:#102e65;color:#fff;padding:20px max(5vw,20px);font-size:18px;font-weight:750}
-main{max-width:1180px;margin:auto;padding:28px 20px 48px}
-.hero{background:linear-gradient(120deg,#123477,#245ac3);color:#fff;border-radius:20px;padding:clamp(22px,5vw,48px)}
-h1{font-size:clamp(34px,6vw,60px);letter-spacing:-.05em;margin:0}
-.hero p{color:#e1edff;margin:8px 0 0}
-.toolbar,.filters{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
-button,select,input,textarea{font:inherit;padding:10px 13px;border:1px solid #b6ccef;border-radius:9px;background:#fff;color:#17396d}
-button{cursor:pointer;font-weight:600}
-button:hover{background:#e5efff}
-button.primary{background:#2155bd;border-color:#2155bd;color:white}
-button.primary:hover{background:#153d92}
-:focus-visible{outline:3px solid #518aff;outline-offset:2px}
-.panel{border:1px solid #cbdcf5;border-radius:15px;background:#fff;overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:620px}
-th,td{text-align:left;padding:13px 16px;border-bottom:1px solid #e6eefc}
-th{background:#dce9ff;font-size:13px}
-tbody tr:nth-child(even){background:#f6f9ff}
-td:first-child{font-weight:650}
-small{display:block;color:#46638b;font-weight:400}
-dialog{border:1px solid #b6ccef;border-radius:16px;width:min(510px,94vw);color:#142b50}
-dialog::backdrop{background:#10234daa}
-label.field{display:grid;gap:4px;margin:10px 0}
-textarea{min-height:75px}
-
-body{background:#282a27;color:#e9e7df;font-family:"Instrument Sans",system-ui,sans-serif}
-header{background:#191b19;border-bottom:1px solid #383b35;color:#e9e7df;letter-spacing:.14em;font-size:13px}
-.hero{background:linear-gradient(120deg,#20221f,#464840);border:1px solid #53564d;border-radius:16px}
-.hero p,small{color:#c3c5b9}
-button,select,input,textarea{background:#30332e;color:#eeeae1;border-color:#64685b}
-button:hover{background:#43473e}
-button.primary{background:#c9d2b3;border-color:#c9d2b3;color:#22281c}
-button.primary:hover{background:#dce3cd}
-:focus-visible{outline-color:#c9d2b3}
-.panel{background:#30322e;border-color:#52564b}
-th{background:#383b35;color:#e2e4d7}
-th,td{border-bottom-color:#46493f}
-tbody tr:nth-child(even){background:#343730}
-dialog{background:#282b26;color:#eeeae1;border-color:#666b5d}
-dialog::backdrop{background:#11130fd9}
-.metrics{display:flex;flex-wrap:wrap;gap:24px;margin-top:22px}
-.metrics span{display:grid;gap:3px;color:#c3c5b9;font-size:13px}
-.metrics strong{font-size:24px;color:#f3f1e9}
-#notice{color:#c3c5b9}
-@media(max-width:580px){main{padding:16px 12px}.filters>*{width:100%}.toolbar>*{flex:1 1 auto}}
-</style><header>АУРАНТ / УДИРДЛАГА</header><main>
-<section class="hero"><h1>Бүртгэлийн удирдлага</h1><p>Бүртгэл, хуудас болон танилцуулгаа нэг дор удирдаарай.</p><div class="metrics"><span><strong id="account-count">0</strong>Бүртгэл</span><span><strong id="portfolio-count">0</strong>Идэвхтэй багц</span></div></section>
-<div class="toolbar"><button class="primary" id="add">Бүртгэл нэмэх</button><button hidden id="seed">Жишээ бүртгэл нэмэх</button><button id="upload">CSV оруулах</button><input id="file" type="file" accept=".csv" hidden><button id="bio-bank">Танилцуулгын сан</button><button id="export">CSV татах</button></div>
-<div class="filters"><input id="search" aria-label="Нэрээр хайх" placeholder="Нэрээр хайх"><select id="portfolio" aria-label="Багцаар шүүх"><option value="">Бүх багц</option></select></div>
-<button id="reset-filters" type="button">Шүүлтүүр арилгах</button><p id="notice" role="status"></p><div class="panel"><table><thead><tr><th>Харагдах нэр</th><th>Багц</th><th>Төлөв</th><th>Хуудасны дугаар / холбоос</th><th>Үйлдэл</th></tr></thead><tbody id="rows"></tbody></table></div>
-</main><dialog id="editor"><form id="form"><h2 id="heading">Бүртгэлийн мэдээлэл</h2>
-<label class="field">Харагдах нэр<input name="name" required></label><label class="field">Латин бичлэг<input name="latin"></label><label class="field">Багц<select name="portfolio"></select></label><label class="field">Ангилал<input name="category" required></label><label class="field">Танилцуулга<textarea name="bio"></textarea></label><button type="button" id="random-bio">Санамсаргүй танилцуулга</button><label class="field">Нүүр зураг<input id="photo" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><img id="preview" alt="Зургийн харагдац" width="72" height="72" hidden><button type="button" id="remove-photo">Зураг арилгах</button><label class="field">Төлөв<select name="status"><option value="Draft">Ноорог</option><option value="Rehearsed">Дотоод туршилт</option><option value="Recorded externally">Дугаар бүртгэсэн</option><option value="Mock Page created">Дотоод туршилт</option></select></label><label class="field">Хуудасны дугаар<input name="pageId"></label><label class="field">Хуудасны холбоос<input name="url" type="url"></label>
-<div class="toolbar"><button type="button" id="cancel">Болих</button><button hidden type="button" id="rehearse">Rehearse creation</button><button hidden type="button" id="create-page">Create mock Page</button><button class="primary">Хадгалах</button></div></form></dialog>
-<dialog id="bio-editor"><form id="bio-form"><h2>Танилцуулгын сан</h2><label class="field">Мөр бүрд нэг танилцуулга<textarea id="bio-lines" rows="8" maxlength="20000"></textarea></label><div class="toolbar"><button type="button" id="bio-cancel">Болих</button><button class="primary">Танилцуулгуудыг хадгалах</button></div></form></dialog>
+*{box-sizing:border-box}body{margin:0;background:#20221f;color:#eeeee6;font:15px system-ui,sans-serif}header{padding:20px 5vw;border-bottom:1px solid #42453d;letter-spacing:.1em;background:#181b17}main{max-width:1240px;margin:auto;padding:32px 20px}h1{font-size:clamp(30px,5vw,48px);margin:0 0 10px;letter-spacing:-.04em}.hero{background:linear-gradient(120deg,#282d25,#53564e);padding:32px;border-radius:18px;border:1px solid #5b6053}.hero p{max-width:800px;line-height:1.6;color:#d2d7c9}.bar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}button,input,select,textarea{font:inherit;color:#eeeee6;background:#30352c;border:1px solid #666f5b;border-radius:8px;padding:11px}button{cursor:pointer}button:hover{background:#48513e}button.primary{background:#c7d3af;color:#202719}button:disabled{opacity:.45;cursor:wait}label{display:grid;gap:7px;margin:13px 0}input,textarea{width:100%}textarea{min-height:90px}.table{overflow:auto;background:#2b3027;border:1px solid #4b5543;border-radius:12px}table{border-collapse:collapse;width:100%;min-width:850px}td,th{padding:14px;text-align:left;border-bottom:1px solid #464e3e}th{color:#cad4bd;background:#353c2e}small{display:block;margin-top:5px;color:#bac6ac;max-width:340px}dialog{background:#262b23;color:#eeeee6;border:1px solid #69775b;border-radius:15px;width:min(620px,95vw);max-height:90vh}dialog::backdrop{background:#111a}#notice{min-height:25px;color:#dce6c9}#search{max-width:420px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:13px;padding:8px}a{color:#d1e5b4}:focus-visible{outline:3px solid #bdd29f;outline-offset:3px}[hidden]{display:none!important}
+</style>
+<header>АУРАНТ / АЖИЛЛАХ ОРЧИН</header>
+<main>
+<section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
+<p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
+<p>Meta хөтөч нээгээд нэвтэрнэ үү. Дараа нь зөв бизнесийн багцаа сонгож, «Manage Pages» цэсийг харагдуулна уу. Бүртгэлд тухайн багцын нэрийг яг адил бичнэ.</p>
+<button id="browser" class="primary">Meta хөтөч нээх</button></section>
+<div class="bar"><button id="add" class="primary">Бүртгэл нэмэх</button><button id="bios">Танилцуулгын сан</button><button id="export">Бүртгэл татах</button><button id="import">Бүртгэл оруулах</button><input type="file" id="file" accept=".json" hidden></div>
+<input id="search" placeholder="Нэр, багц эсвэл дугаараар хайх" aria-label="Хайх">
+<p id="notice" role="status"></p>
+<div class="table"><table><thead><tr><th>Нэр / танилцуулга</th><th>Бизнесийн багц</th><th>Төлөв</th><th>Хуудасны дугаар</th><th>Үйлдэл</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main>
+<dialog id="editor"><form id="form"><h2>Бүртгэлийн мэдээлэл</h2>
+<label>Хуудасны нэр<input name="name" maxlength="100" required></label>
+<label>Бизнесийн багцын нэр<input name="portfolio" required placeholder="Aurant 3"></label>
+<label>Тохирох ангиллууд<textarea name="categories" required placeholder="Meta дээрх ангиллын нэрийг мөр бүрд оруулна уу."></textarea></label>
+<small>Систем энэ жагсаалтаас нэг ангиллыг санамсаргүй сонгоно. Meta дээрх нэртэй таарах ёстой.</small>
+<label>Танилцуулга<textarea name="bio" maxlength="100" required></textarea></label>
+<button id="random" type="button">Санамсаргүй танилцуулга</button>
+<small>Монгол хэлээр 3–8 үгтэй өгүүлбэр.</small>
+<div class="bar"><button class="primary">Хадгалах</button><button type="button" data-close="editor">Болих</button></div></form></dialog>
+<dialog id="bio-dialog"><form id="bio-form"><h2>Танилцуулгын сан</h2><label>Мөр бүрд нэг өгүүлбэр<textarea id="bio-text" rows="12"></textarea></label><div class="bar"><button class="primary">Хадгалах</button><button type="button" data-close="bio-dialog">Болих</button></div></form></dialog>
+<dialog id="id-dialog"><form id="id-form"><h2>Хуудасны дугаар</h2><label>Meta дээрх хуудасны дугаар<input name="pageId" pattern="[0-9]+" required></label><label>Facebook холбоос<input name="url" type="url"></label><div class="bar"><button class="primary">Хадгалах</button><button type="button" data-close="id-dialog">Болих</button></div></form></dialog>
 <script>
-const get = id => document.getElementById(id);
-const fields = ['name','latin','portfolio','category','bio','status','pageId','url','mockPageId'];
-const portfolios = ['Portfolio 1','Portfolio 2','Portfolio 3','Portfolio 4'];
-const statuses = ['Draft','Rehearsed','Recorded externally','Mock Page created'];
-const form = get('form'), editor = get('editor');
-let drafts = JSON.parse(localStorage.getItem('user-workspace-v1') || '[]'), editing, photo, photoRead;
-for (const portfolio of portfolios) {
-  get('portfolio').add(new Option(portfolio));
-  form.elements.portfolio.add(new Option(portfolio));
+const token='__LOCAL_TOKEN__';
+const $=id=>document.getElementById(id);
+let state={pages:[],bios:[],busy:false}, editing=null, recording=null, connected=false;
+const names={draft:'Бэлэн',opening:'Хөтөч нээж байна',filling:'Бөглөж байна',submitting:'Үүсгэж байна',complete:'Дугаар хадгалсан',review:'Шалгах шаардлагатай',failed:'Алхам дууссангүй'};
+async function api(route,body) {
+ const response=await fetch('/api/'+route,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Workforce-Token':token},body:body?JSON.stringify(body):undefined});
+ const data=await response.json();
+ if(!response.ok) throw Error(data.error || 'Үйлчилгээтэй холбогдож чадсангүй.');
+ return data;
 }
-function render(message) {
-  const query = get('search').value.trim().toLocaleLowerCase();
-  const portfolio = get('portfolio').value;
-  const visible = drafts.filter(d => (!portfolio || d.portfolio === portfolio) && (d.name+' '+d.latin).toLocaleLowerCase().includes(query));
-  get('account-count').textContent = drafts.length;
-  get('portfolio-count').textContent = new Set(drafts.map(draft => draft.portfolio)).size;
-  get('notice').textContent = message || visible.length+' харагдаж байна / '+drafts.length+' бүртгэл';
-  get('rows').replaceChildren();
-  if (!visible.length) {
-    const cell = get('rows').insertRow().insertCell();
-    cell.colSpan = 5;
-    cell.textContent = drafts.length ? 'Шүүлтүүрт тохирох бүртгэл алга.' : 'Бүртгэл нэмэх эсвэл CSV файлаас оруулна уу.';
+function notice(message){$('notice').textContent=message;}
+function cell(row,value){const node=row.insertCell();node.textContent=value;return node;}
+function button(parent,text,action,disabled=false){const b=document.createElement('button');b.textContent=text;b.disabled=disabled;b.onclick=()=>run(action);parent.append(b);}
+async function run(action){try{await action();await refresh();}catch(error){notice(error.message);}}
+function render(){
+ const query=$('search').value.toLowerCase();
+ $('rows').replaceChildren();
+ const pages=state.pages.filter(p=>[p.name,p.portfolio,p.page_id].join(' ').toLowerCase().includes(query));
+ for(const p of pages){
+  const row=$('rows').insertRow(), first=cell(row,p.name), bio=document.createElement('small');bio.textContent=p.bio;first.append(bio);
+  cell(row,p.portfolio);const status=cell(row,names[p.status]||p.status);
+  const message=document.createElement('small');message.textContent=p.message;status.append(message);
+  cell(row,p.page_id||'—');const actions=cell(row,'');actions.className='actions';
+  const locked=state.busy||['review','opening','filling','submitting'].includes(p.status);
+  button(actions,'Засах',()=>openEditor(p),locked);
+  if(['draft','failed'].includes(p.status)) button(actions,'Хуудас үүсгэх',async()=>{
+    if(confirm(p.name+' хуудсыг '+p.portfolio+' багцад үүсгэх үү?')) await api('create',{id:p.id});
+  },state.busy);
+  if(p.status==='review') {
+   button(actions,'Дугаар татах',()=>api('capture',{id:p.id}),state.busy);
+   button(actions,'Үүсээгүйг шалгасан',async()=>{
+    if(confirm('Meta дээр энэ хуудас үүсээгүйг шалгасан уу?')) await api('reset',{id:p.id,confirmedAbsent:true});
+   },state.busy);
   }
-  for (const draft of visible) {
-    const row = get('rows').insertRow();
-    const name = row.insertCell();
-    if (draft.photo) {
-      const avatar = document.createElement('img');
-      avatar.src = draft.photo;
-      avatar.alt = '';
-      avatar.width = avatar.height = 32;
-      avatar.style.cssText = 'border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px';
-      name.append(avatar);
-    }
-    name.append(document.createTextNode(draft.name));
-    const latin = document.createElement('small');
-    latin.textContent = draft.latin;
-    name.append(latin);
-    for (const value of [draft.portfolio,({Draft:'Ноорог',Rehearsed:'Дотоод туршилт','Recorded externally':'Дугаар бүртгэсэн','Mock Page created':'Дотоод туршилт'})[draft.status] || draft.status,[draft.pageId,draft.url].filter(Boolean).join(' / ') || '—']) row.insertCell().textContent = value;
-    const button = document.createElement('button');
-    button.textContent = 'Засах';
-    button.onclick = () => openDraft(draft);
-    row.insertCell().append(button);
-  }
+  button(actions,'Дугаар оруулах',()=>{recording=p.id;$('id-form').elements.pageId.value=p.page_id||'';$('id-form').elements.url.value=p.url||'';$('id-dialog').showModal();},state.busy);
+ }
+ if(!pages.length){const c=$('rows').insertRow().insertCell();c.colSpan=5;c.textContent='Бүртгэл алга. Бодит хуудасны мэдээллээ нэмнэ үү.';}
+ $('browser').disabled=state.busy;
 }
-function commit(next, message) {
-  try { localStorage.setItem('user-workspace-v1', JSON.stringify(next)); }
-  catch { render('Хадгалж чадсангүй. Хөтчийн хадгалах зайг шалгана уу.'); return false; }
-  drafts = next;
-  render(message);
-  return true;
-}
-function openDraft(draft) {
-  editing = draft;
-  const values = draft ? {...draft, category:draft.category === 'General' ? 'Хувийн блог' : draft.category} : {portfolio:get('portfolio').value || portfolios[0],category:'Хувийн блог',status:'Draft'};
-  for (const field of fields) if (form.elements[field]) form.elements[field].value = values[field] || '';
-  photoRead = null;
-  setPhoto(draft?.photo || '');
-  get('photo').value = '';
-  get('rehearse').textContent = draft?.status === 'Rehearsed' ? 'Rehearse update' : 'Rehearse creation';
-  get('create-page').textContent = draft?.mockPageId ? 'Update mock Page' : 'Create mock Page';
-  editor.showModal();
-}
-function setPhoto(value) {
-  photo = value;
-  const preview = get('preview');
-  preview.hidden = !value;
-  if (value) preview.src = value;
-  else preview.removeAttribute('src');
-}
-get('photo').onchange = event => {
-  const file = event.target.files[0];
-  if (!file) return;
-  if (!['image/png','image/jpeg','image/webp','image/gif'].includes(file.type) || file.size > 250000) {
-    event.target.value = '';
-    return alert('250 КБ-аас бага PNG, JPEG, WebP эсвэл GIF зураг сонгоно уу.');
-  }
-  const reader = new FileReader();
-  photoRead = reader;
-  reader.onload = () => {
-    if (photoRead !== reader) return;
-    photoRead = null;
-    setPhoto(reader.result);
-  };
-  reader.onerror = () => {
-    if (photoRead !== reader) return;
-    photoRead = null;
-    alert('Сонгосон зургийг уншиж чадсангүй.');
-  };
-  reader.readAsDataURL(file);
-};
-get('remove-photo').onclick = () => {
-  photoRead = null;
-  get('photo').value = '';
-  setPhoto('');
-};
-const bioKey = 'user-workspace-bios-v1';
-const previousDefaultBios = ['Collects postcards and keeps a weekend scrapbook.', 'Photographs stations and writes short travel notes.', 'Repairs old radios and shares progress photos.', 'Sketches city architecture in a pocket notebook.', 'Tracks good cycling routes and shares tips for beginners.'];
-const defaultBios = [
-  'Хөдөө явах дуртай', 'Ээжийн цай хамгийн амттай', 'Өглөө эрт босдог',
-  'Гэртээ ном унших дуртай', 'Ууланд алхах сайхан', 'Өдөр бүр хөгжим сонсдог',
-  'Найзуудтайгаа уулзах дуртай', 'Намрын өнгөнд дуртай', 'Гэрийн хоол хамгийн сайхан',
-  'Голын эрэг дээр суух дуртай', 'Бороотой өдөр цай ууна', 'Аавтайгаа загасанд явдаг',
-  'Цонхоор цас харах сайхан', 'Хашаандаа цэцэг тарьдаг', 'Орой болгон алхдаг',
-  'Эмээгийн хийсэн боорцгонд дуртай', 'Амралтаараа нутаг руугаа явдаг',
-  'Өглөөний нарыг харах дуртай', 'Хуучны дуу сонсох дуртай',
-  'Салхи сэвэлзэх сайхан', 'Удаан алхаж бодлоо цэгцэлдэг',
-  'Амралтын өдөр эрт босдоггүй', 'Хааяа хуучин зургаа үздэг',
-  'Нохойтойгоо орой салхинд гардаг'
-];
-const savedBios = JSON.parse(localStorage.getItem(bioKey) || 'null');
-let bios = savedBios === null || JSON.stringify(savedBios) === JSON.stringify(previousDefaultBios)
-  ? defaultBios : savedBios.filter(bio => !/[a-zA-Z]/.test(bio));
-if (!bios.length) bios = defaultBios;
-get('bio-bank').onclick = () => {
-  get('bio-lines').value = bios.join('\n');
-  get('bio-editor').showModal();
-};
-get('bio-cancel').onclick = () => get('bio-editor').close();
-get('bio-form').onsubmit = event => {
-  event.preventDefault();
-  const next = [...new Set(get('bio-lines').value.split(/\r?\n/).map(line => line.trim()).filter(Boolean))];
-  if (next.some(bio => /[a-zA-Z]/.test(bio) || bio.split(/\s+/).length < 3 || bio.split(/\s+/).length > 8 || bio.length > 100)) return alert('Танилцуулга нь монгол хэлээр 3–8 үгтэй, 100 тэмдэгтээс богино байна.');
-  if (next.length > 100) return alert('100 хүртэл танилцуулга хадгална.');
-  try { localStorage.setItem(bioKey, JSON.stringify(next)); }
-  catch { return alert('Танилцуулгын санг хадгалж чадсангүй.'); }
-  bios = next;
-  get('bio-editor').close();
-  render(bios.length+' танилцуулга байна.');
-};
-get('random-bio').onclick = () => {
-  const field = form.elements.bio;
-  const choices = bios.filter(bio => bio !== field.value);
-  if (!bios.length) return alert('Танилцуулгын санд эхлээд өгүүлбэр нэмнэ үү.');
-  if (choices.length) field.value = choices[Math.floor(Math.random()*choices.length)];
-};
-function save(rehearse, createPage = false) {
-  if (photoRead) return alert('Зураг ачаалж дуусахыг хүлээнэ үү.');
-  if (!form.reportValidity()) return;
-  const values = Object.fromEntries(fields.map(field => [field,(form.elements[field]?.value || '').trim()]));
-  values.photo = photo;
-  if (editing?.mockPageId) values.mockPageId = editing.mockPageId;
-  if (values.bio && (/[a-zA-Z]/.test(values.bio) || values.bio.split(/\s+/).length < 3 || values.bio.split(/\s+/).length > 8 || values.bio.length > 100)) return alert('Танилцуулгаа монгол хэлээр 3–8 үгтэй бичнэ үү.');
-  if (values.pageId && (!/^\d+$/.test(values.pageId) || drafts.some(draft => draft !== editing && draft.pageId === values.pageId))) return alert('Хуудасны дугаар зөвхөн цифрээс бүрдэх бөгөөд давхардаж болохгүй.');
-  if (!values.name || !values.category) return alert('Нэр болон ангиллаа оруулна уу.');
-  if (createPage) {
-    const action = values.mockPageId ? 'Update' : 'Create';
-    if (!confirm([action+' mock Page locally?',values.name,values.portfolio,values.category,values.bio || 'No bio'].join('\n'))) return;
-    values.mockPageId ||= 'mock-'+Array.from(crypto.getRandomValues(new Uint8Array(12)), byte => byte.toString(16).padStart(2,'0')).join('');
-    values.status = 'Mock Page created';
-  }
-  if (rehearse) {
-    if (values.status === 'Recorded externally') return alert('This profile is already recorded externally.');
-    const action = editing?.status === 'Rehearsed' ? 'Update' : 'Create';
-    const name = editing && editing.name !== values.name ? editing.name+' → '+values.name : values.name;
-    if (!confirm([action+' mock user',name,values.portfolio,values.category,values.bio || 'No bio',photo ? 'Profile photo selected' : 'No profile photo'].join('\n'))) return;
-    values.status = 'Rehearsed';
-  }
-  if (values.status === 'Recorded externally' && !values.pageId && !values.url) return alert('Хуудасны дугаар эсвэл холбоос оруулна уу.');
-  const next = editing ? drafts.map(draft => draft === editing ? values : draft) : [...drafts,values];
-  if (commit(next,rehearse ? 'Rehearsal recorded locally.' : undefined)) editor.close();
-}
-form.onsubmit = event => { event.preventDefault(); save(false); };
-get('rehearse').onclick = () => save(true);
-get('create-page').onclick = () => save(false,true);
-get('cancel').onclick = () => editor.close();
-get('add').onclick = () => openDraft();
-get('search').oninput = () => render();
-get('portfolio').onchange = () => render();
-get('reset-filters').onclick = () => {
-  get('search').value = '';
-  get('portfolio').value = '';
+async function refresh(){
+ try{
+  state=await api('state');connected=true;
+  $('connection').textContent=state.busy?'Ажиллагаа явагдаж байна.':state.browser?'Meta хөтөч нээлттэй. Нэвтрэлт болон сонгосон багцаа шалгана уу.':'Компьютерийн мэдээллийн сантай холбогдлоо.';
+  for(const id of ['add','bios','export','import','browser']) $(id).disabled=false;
   render();
-};
-
-const first = ['Бат|Bat','Наран|Naran','Саруул|Saruul','Тэмүүлэн|Temuulen','Мөнх|Munkh','Ариун|Ariun','Болор|Bolor','Уянга|Uyanga','Энх|Enkh','Хулан|Khulan'];
-const last = ['Эрдэнэ|Erdene','Туяа|Tuya','Баяр|Bayar','Сүрэн|Suren','Дорж|Dorj','Чулуун|Chuluun','Алтан|Altan','Од|Od','Гэрэл|Gerel','Сайхан|Saikhan','Төгс|Tugs','Билэг|Bileg','Дөл|Dul','Заяа|Zayaa','Хишиг|Khishig','Цэцэг|Tsetseg','Тэнгэр|Tenger','Сондор|Sondor','Далай|Dalai','Оргил|Orgil'];
-const nicknames = ['Batuka','Batuna','Naraa','Saraa','Temka','Muuji','Ari','Bolo','Uyaa','Khula'];
-function chooseBio() {
-  return defaultBios[Math.floor(Math.random() * defaultBios.length)];
+ }catch{
+  connected=false;
+  $('connection').textContent='Энэ хуудас компьютер дээр ажиллана. Төслийн хавтсаас START-WINDOWS.cmd файлыг ажиллуулаад http://127.0.0.1:4173 хаягийг нээнэ үү.';
+  for(const id of ['add','bios','export','import','browser']) $(id).disabled=true;
+ }
 }
-const activities = ['collects old street maps','repairs vintage radios','draws city skylines','photographs railway stations','collects postcards','keeps a weather journal','restores old bicycles','makes short travel videos','catalogs used books','sketches local architecture'];
-const details = ['and shares weekend discoveries','and keeps a monthly scrapbook','and writes short field notes','and hosts a small hobby meetup','and posts a photo diary','and keeps a list of favorite spots','and shares tips for beginners','and saves progress photos','and plans a new project each month','and documents the tools used','and trades finds with friends','and shares one update every Friday','and keeps an illustrated notebook','and records a short audio diary','and organizes a seasonal swap','and logs experiments as they happen','and makes simple guides','and tracks new finds on a map','and puts together themed albums','and writes a monthly recap'];
-const previousGeneratedBios = new Set(activities.flatMap(activity =>
-  details.map(detail => 'Mock profile that '+activity+' '+detail+'.')
-));
-let migrated = false;
-const refreshed = drafts.map(draft => {
-  if (!/[a-zA-Z]/.test(draft.bio || '')) return draft;
-  migrated = true;
-  return {...draft, bio: chooseBio()};
+function openEditor(p){
+ editing=p?.id||null;const form=$('form');
+ for(const key of ['name','portfolio','bio'])form.elements[key].value=p?.[key]||'';
+ form.elements.categories.value=p?.categories.join('\n')||'';
+ $('editor').showModal();
+}
+$('add').onclick=()=>openEditor();
+$('browser').onclick=()=>run(()=>api('browser',{}));
+$('search').oninput=render;
+$('random').onclick=()=>{
+ const field=$('form').elements.bio, choices=state.bios.filter(b=>b!==field.value);
+ if(choices.length)field.value=choices[Math.floor(Math.random()*choices.length)];
+};
+$('form').onsubmit=event=>{event.preventDefault();run(async()=>{
+ const f=$('form').elements;
+ await api('save',{id:editing,name:f.name.value,portfolio:f.portfolio.value,categories:f.categories.value.split(/\r?\n/),bio:f.bio.value});
+ $('editor').close();notice('Бүртгэл хадгалагдлаа.');
+});};
+$('bios').onclick=()=>{$('bio-text').value=state.bios.join('\n');$('bio-dialog').showModal();};
+$('bio-form').onsubmit=event=>{event.preventDefault();run(async()=>{await api('bios',{bios:$('bio-text').value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean)});$('bio-dialog').close();});};
+$('id-form').onsubmit=event=>{event.preventDefault();run(async()=>{await api('record-id',{id:recording,pageId:$('id-form').elements.pageId.value,url:$('id-form').elements.url.value});$('id-dialog').close();});};
+for(const b of document.querySelectorAll('[data-close]'))b.onclick=()=>$(b.dataset.close).close();
+$('export').onclick=()=>{
+ const url=URL.createObjectURL(new Blob([JSON.stringify(state.pages,null,2)],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download='workforce.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+$('import').onclick=()=>$('file').click();
+$('file').onchange=()=>run(async()=>{
+ const file=$('file').files[0];$('file').value='';if(!file)return;
+ const records=JSON.parse(await file.text());if(!Array.isArray(records))throw Error('Бүртгэлийн жагсаалт шаардлагатай.');
+ const result=await api('import',{records});
+ notice(result.count+' бүртгэл орууллаа.');
 });
-if (migrated) commit(refreshed);
-get('seed').onclick = () => {
-  const samples = first.flatMap((given,i) => last.map((family,j) => {
-    const [a,b] = given.split('|'), [c,d] = family.split('|');
-    const variant = j%5;
-    const name = variant === 0 ? a+' '+c : variant === 1 ? b+' '+d : variant === 2 ? a+' '+d : variant === 3 ? b+' '+c : j === 4 ? nicknames[i] : nicknames[i]+' '+d;
-    return {name,latin:name === b+' '+d ? '' : b+' '+d,portfolio:portfolios[j%4],category:'Хувийн блог',bio:chooseBio(),status:'Draft',pageId:'',url:''};
-  }));
-  const existing = new Set(drafts.map(d => d.name));
-  const added = samples.filter(d => !existing.has(d.name));
-  commit([...drafts,...added],added.length+' mock users added.');
-};
-function parseCSV(source) {
-  const records = [];
-  const token = /(?:"((?:[^"]|"")*)"|([^",\r\n]*))(,|\r\n|\r|\n|$)/y;
-  const text = source.replace(/^\uFEFF/,'');
-  let row = [], cursor = 0;
-  while (cursor < text.length) {
-    token.lastIndex = cursor;
-    const match = token.exec(text);
-    if (!match || token.lastIndex === cursor) throw Error('Invalid CSV near character '+(cursor+1));
-    cursor = token.lastIndex;
-    row.push(match[1] === undefined ? match[2] : match[1].replaceAll('""','"'));
-    if (match[3] !== ',') { records.push(row); row = []; }
-  }
-  if (row.length) records.push([...row,'']);
-  return records;
-}
-get('upload').onclick = () => get('file').click();
-get('file').onchange = async event => {
-  const file = event.target.files[0];
-  event.target.value = '';
-  if (!file) return;
-  try {
-    const [header,...records] = parseCSV(await file.text());
-    const requiredFields = fields.filter(field => field !== 'mockPageId');
-    if (!header || new Set(header).size !== header.length || !header.every(field => fields.includes(field)) || !requiredFields.every(field => header.includes(field))) throw Error('Татсан CSV файлын баганын нэрийг ашиглана уу.');
-    const imported = records.filter(row => row.some(Boolean)).map(row => {
-      if (row.length !== header.length) throw Error('Нэг мөрийн баганын тоо буруу байна.');
-      const draft = Object.fromEntries(header.map((field,i) => [field,row[i].trim()]));
-      if (!draft.name || !draft.category || !portfolios.includes(draft.portfolio) || !statuses.includes(draft.status)) throw Error('Check name, category, portfolio and status for '+(draft.name || 'an unnamed row')+'.');
-      if (draft.status === 'Recorded externally' && !draft.url && !draft.pageId) throw Error('Нийтэлсэн бүртгэлд дугаар эсвэл холбоос шаардлагатай.');
-      if (draft.url && !/^https?:\/\/[^\s]+$/i.test(draft.url)) throw Error('Invalid profile URL for '+draft.name+'.');
-      return draft;
-    });
-    commit([...drafts,...imported],imported.length+' бүртгэл орууллаа.');
-  } catch (error) { render(error.message); }
-};
-get('export').onclick = () => {
-  const quote = value => '"'+value.replaceAll('"','""')+'"';
-  const csv = [fields.join(','),...drafts.map(d => fields.map(field => quote(d[field] || '')).join(','))].join('\r\n');
-  const url = URL.createObjectURL(new Blob(['\uFEFF',csv],{type:'text/csv;charset=utf-8'}));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'users.csv';
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url),1000);
-};
-render();
+refresh();setInterval(refresh,3000);
 </script></html>

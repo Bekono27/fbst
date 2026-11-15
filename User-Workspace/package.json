@@ -1,1 +1,12 @@
-{"name":"user-workspace","version":"1.0.0","private":true,"scripts":{"start":"node server.cjs","test":"playwright test"},"devDependencies":{"@playwright/test":"^1.51.0"}}
+{
+  "name": "aurant-workforce",
+  "version": "2.0.0",
+  "private": true,
+  "engines": {"node": ">=24"},
+  "scripts": {
+    "start": "node server.cjs",
+    "setup": "playwright install chromium",
+    "test": "node --test tests/core.test.cjs"
+  },
+  "dependencies": {"playwright": "1.58.2"}
+}
