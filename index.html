@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ChefPages</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f5f0;color:#233229;font:15px system-ui}header{background:#183b2e;color:white;padding:18px max(5vw,20px);font-weight:750;letter-spacing:.04em}main{max-width:1150px;margin:auto;padding:36px 20px}h1{font-size:clamp(34px,6vw,62px);letter-spacing:-.06em;margin:0}p{color:#4d6054}.toolbar,.filters{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}button,select,input,textarea{font:inherit;padding:9px 12px;border:1px solid #b7c4bb;border-radius:8px;background:white;color:#233229}button{cursor:pointer}button.primary{background:#183b2e;color:white}.panel{border:1px solid #d9e1d9;border-radius:14px;background:white;overflow:auto}table{width:100%;border-collapse:collapse;min-width:580px}th,td{text-align:left;padding:13px 16px;border-bottom:1px solid #edf0ed}th{background:#edf2eb}small{display:block;color:#4d6054}dialog{border:1px solid #b7c4bb;border-radius:16px;width:min(510px,94vw)}dialog::backdrop{background:#142c23aa}label.field{display:grid;gap:4px;margin:10px 0}textarea{min-height:75px}
+</style><header>ChefPages</header><main>
+<h1>Page workspace</h1><p>Manage drafts across four portfolios and rehearse Page creation locally.</p>
+<div class="toolbar"><button class="primary" id="add">New draft</button><button id="seed">Load 200 demo drafts</button><button id="upload">Import CSV</button><input id="file" type="file" accept=".csv" hidden><button id="export">Export CSV</button></div>
+<div class="filters"><input id="search" aria-label="Search names" placeholder="Search names"><select id="portfolio" aria-label="Filter by portfolio"><option value="">All portfolios</option></select></div>
+<p id="notice" role="status"></p><div class="panel"><table><thead><tr><th>Page name</th><th>Portfolio</th><th>Status</th><th>Page ID / URL</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main><dialog id="editor"><form id="form"><h2 id="heading">Page draft</h2>
+<label class="field">Page name<input name="name" required></label><label class="field">Latin spelling<input name="latin"></label><label class="field">Portfolio<select name="portfolio"></select></label><label class="field">Category<input name="category" required></label><label class="field">Bio<textarea name="bio"></textarea></label><label class="field">Status<select name="status"><option>Draft</option><option>Rehearsed</option><option>Published manually</option></select></label><label class="field">Facebook Page ID<input name="pageId"></label><label class="field">Facebook Page URL<input name="url" type="url"></label>
+<div class="toolbar"><button type="button" id="cancel">Cancel</button><button type="button" id="rehearse">Rehearse creation</button><button class="primary">Save draft</button></div></form></dialog>
+<script>
+const get = id => document.getElementById(id);
+const fields = ['name','latin','portfolio','category','bio','status','pageId','url'];
+const portfolios = ['Portfolio 1','Portfolio 2','Portfolio 3','Portfolio 4'];
+const statuses = ['Draft','Rehearsed','Published manually'];
+const form = get('form'), editor = get('editor');
+let drafts = JSON.parse(localStorage.getItem('chefpages-v1') || '[]'), editing;
+for (const portfolio of portfolios) {
+  get('portfolio').add(new Option(portfolio));
+  form.elements.portfolio.add(new Option(portfolio));
+}
+function render(message) {
+  const query = get('search').value.trim().toLocaleLowerCase();
+  const portfolio = get('portfolio').value;
+  const visible = drafts.filter(d => (!portfolio || d.portfolio === portfolio) && (d.name+' '+d.latin).toLocaleLowerCase().includes(query));
+  get('notice').textContent = message || visible.length+' shown / '+drafts.length+' drafts';
+  get('rows').replaceChildren();
+  for (const draft of visible) {
+    const row = get('rows').insertRow();
+    const name = row.insertCell();
+    name.textContent = draft.name;
+    const latin = document.createElement('small');
+    latin.textContent = draft.latin;
+    name.append(latin);
+    for (const value of [draft.portfolio,draft.status,[draft.pageId,draft.url].filter(Boolean).join(' / ') || '—']) row.insertCell().textContent = value;
+    const button = document.createElement('button');
+    button.textContent = 'Open';
+    button.onclick = () => openDraft(draft);
+    row.insertCell().append(button);
+  }
+}
+function commit(next, message) {
+  try { localStorage.setItem('chefpages-v1', JSON.stringify(next)); }
+  catch { render('Could not save. Browser storage may be full or disabled.'); return false; }
+  drafts = next;
+  render(message);
+  return true;
+}
+function openDraft(draft) {
+  editing = draft;
+  const values = draft || {portfolio:get('portfolio').value || portfolios[0],category:'Chef',status:'Draft'};
+  for (const field of fields) form.elements[field].value = values[field] || '';
+  editor.showModal();
+}
+function save(rehearse) {
+  if (!form.reportValidity()) return;
+  const values = Object.fromEntries(fields.map(field => [field,form.elements[field].value.trim()]));
+  if (!values.name || !values.category) return alert('Enter a Page name and category.');
+  if (rehearse) {
+    if (values.status === 'Published manually') return alert('This Page is already recorded as published.');
+    if (!confirm('Confirm local rehearsal for '+values.name+' in '+values.portfolio+'?')) return;
+    values.status = 'Rehearsed';
+  }
+  if (values.status === 'Published manually' && !values.pageId && !values.url) return alert('Enter the Facebook Page ID or URL.');
+  const next = editing ? drafts.map(draft => draft === editing ? values : draft) : [...drafts,values];
+  if (commit(next,rehearse ? 'Rehearsal recorded locally.' : undefined)) editor.close();
+}
+form.onsubmit = event => { event.preventDefault(); save(false); };
+get('rehearse').onclick = () => save(true);
+get('cancel').onclick = () => editor.close();
+get('add').onclick = () => openDraft();
+get('search').oninput = () => render();
+get('portfolio').onchange = () => render();
+
+const first = ['Бат|Bat','Наран|Naran','Саруул|Saruul','Тэмүүлэн|Temuulen','Мөнх|Munkh','Ариун|Ariun','Болор|Bolor','Уянга|Uyanga','Энх|Enkh','Хулан|Khulan'];
+const last = ['Эрдэнэ|Erdene','Туяа|Tuya','Баяр|Bayar','Сүрэн|Suren','Дорж|Dorj','Чулуун|Chuluun','Алтан|Altan','Од|Od','Гэрэл|Gerel','Сайхан|Saikhan','Төгс|Tugs','Билэг|Bileg','Дөл|Dul','Заяа|Zayaa','Хишиг|Khishig','Цэцэг|Tsetseg','Тэнгэр|Tenger','Сондор|Sondor','Далай|Dalai','Оргил|Orgil'];
+const cooking = ['buuz and dumplings','seasonal soups','grilled lamb','dairy desserts','handmade noodles','tea and baked goods','vegetable sides'];
+const formats = ['shares family-style recipes for','practices fast weeknight versions of','runs imaginary cooking workshops on','develops market-inspired menus featuring'];
+get('seed').onclick = () => {
+  const samples = first.flatMap((given,i) => last.map((family,j) => {
+    const [a,b] = given.split('|'), [c,d] = family.split('|');
+    return {name:a+' '+c,latin:b+' '+d,portfolio:portfolios[j%4],category:'Chef',bio:'Fictional demo chef who '+formats[(i+j)%4]+' '+cooking[(i*3+j)%7]+'.',status:'Draft',pageId:'',url:''};
+  }));
+  const existing = new Set(drafts.map(d => d.name));
+  const added = samples.filter(d => !existing.has(d.name));
+  commit([...drafts,...added],added.length+' demo drafts added.');
+};
+function parseCSV(source) {
+  const records = [];
+  const token = /(?:"((?:[^"]|"")*)"|([^",\r\n]*))(,|\r\n|\r|\n|$)/y;
+  const text = source.replace(/^\uFEFF/,'');
+  let row = [], cursor = 0;
+  while (cursor < text.length) {
+    token.lastIndex = cursor;
+    const match = token.exec(text);
+    if (!match || token.lastIndex === cursor) throw Error('Invalid CSV near character '+(cursor+1));
+    cursor = token.lastIndex;
+    row.push(match[1] === undefined ? match[2] : match[1].replaceAll('""','"'));
+    if (match[3] !== ',') { records.push(row); row = []; }
+  }
+  if (row.length) records.push([...row,'']);
+  return records;
+}
+get('upload').onclick = () => get('file').click();
+get('file').onchange = async event => {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  try {
+    const [header,...records] = parseCSV(await file.text());
+    if (!header || new Set(header).size !== fields.length || header.length !== fields.length || !fields.every(field => header.includes(field))) throw Error('Use the column headers from Export CSV.');
+    const imported = records.filter(row => row.some(Boolean)).map(row => {
+      if (row.length !== header.length) throw Error('A row has the wrong number of columns.');
+      const draft = Object.fromEntries(header.map((field,i) => [field,row[i].trim()]));
+      if (!draft.name || !draft.category || !portfolios.includes(draft.portfolio) || !statuses.includes(draft.status)) throw Error('Check name, category, portfolio and status for '+(draft.name || 'an unnamed row')+'.');
+      if (draft.status === 'Published manually' && !draft.url && !draft.pageId) throw Error('Published entries need an ID or URL.');
+      if (draft.url && !/^https?:\/\/[^\s]+$/i.test(draft.url)) throw Error('Invalid Page URL for '+draft.name+'.');
+      return draft;
+    });
+    commit([...drafts,...imported],imported.length+' drafts imported.');
+  } catch (error) { render(error.message); }
+};
+get('export').onclick = () => {
+  const quote = value => '"'+value.replaceAll('"','""')+'"';
+  const csv = [fields.join(','),...drafts.map(d => fields.map(field => quote(d[field])).join(','))].join('\r\n');
+  const url = URL.createObjectURL(new Blob(['\uFEFF',csv],{type:'text/csv;charset=utf-8'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'chefpages.csv';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+};
+render();
+</script></html>
