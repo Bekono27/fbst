@@ -1,5 +1,5 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>User Workspace</title>
+<!doctype html><html lang="mn"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Аурант ажиллах орчин</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#eef4ff;color:#142b50;font:15px system-ui,sans-serif}
@@ -47,15 +47,15 @@ dialog::backdrop{background:#11130fd9}
 .metrics strong{font-size:24px;color:#f3f1e9}
 #notice{color:#c3c5b9}
 @media(max-width:580px){main{padding:16px 12px}.filters>*{width:100%}.toolbar>*{flex:1 1 auto}}
-</style><header>AURANT / SOCIAL STUDIO</header><main>
-<section class="hero"><h1>Account maintenance</h1><p>Review profiles and keep account details up to date across your portfolios.</p><div class="metrics"><span><strong id="account-count">0</strong>Accounts</span><span><strong id="portfolio-count">0</strong>Active portfolios</span></div></section>
-<div class="toolbar"><button class="primary" id="add">New user</button><button id="seed">Load 200 mock users</button><button id="upload">Import CSV</button><input id="file" type="file" accept=".csv" hidden><button id="bio-bank">Bio database</button><button id="export">Export CSV</button></div>
-<div class="filters"><input id="search" aria-label="Search names" placeholder="Search display names"><select id="portfolio" aria-label="Filter by portfolio"><option value="">All portfolios</option></select></div>
-<button id="reset-filters" type="button">Clear filters</button><p id="notice" role="status"></p><div class="panel"><table><thead><tr><th>Display name</th><th>Portfolio</th><th>Status</th><th>User ID / Profile URL</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
-</main><dialog id="editor"><form id="form"><h2 id="heading">User profile</h2>
-<label class="field">Display name<input name="name" required></label><label class="field">Latin spelling<input name="latin"></label><label class="field">Portfolio<select name="portfolio"></select></label><label class="field">Category<input name="category" required></label><label class="field">Bio<textarea name="bio"></textarea></label><button type="button" id="random-bio">Random bio</button><label class="field">Profile photo<input id="photo" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><img id="preview" alt="Profile photo preview" width="72" height="72" hidden><button type="button" id="remove-photo">Remove photo</button><label class="field">Status<select name="status"><option>Draft</option><option>Rehearsed</option><option>Recorded externally</option><option>Mock Page created</option></select></label><label class="field">User ID<input name="pageId"></label><label class="field">Profile URL<input name="url" type="url"></label>
-<div class="toolbar"><button type="button" id="cancel">Cancel</button><button type="button" id="rehearse">Rehearse creation</button><button type="button" id="create-page">Create mock Page</button><button class="primary">Save user</button></div></form></dialog>
-<dialog id="bio-editor"><form id="bio-form"><h2>Bio database</h2><label class="field">One bio per line<textarea id="bio-lines" rows="8" maxlength="20000"></textarea></label><div class="toolbar"><button type="button" id="bio-cancel">Cancel</button><button class="primary">Save bios</button></div></form></dialog>
+</style><header>АУРАНТ / УДИРДЛАГА</header><main>
+<section class="hero"><h1>Бүртгэлийн удирдлага</h1><p>Бүртгэл, хуудас болон танилцуулгаа нэг дор удирдаарай.</p><div class="metrics"><span><strong id="account-count">0</strong>Бүртгэл</span><span><strong id="portfolio-count">0</strong>Идэвхтэй багц</span></div></section>
+<div class="toolbar"><button class="primary" id="add">Бүртгэл нэмэх</button><button hidden id="seed">Жишээ бүртгэл нэмэх</button><button id="upload">CSV оруулах</button><input id="file" type="file" accept=".csv" hidden><button id="bio-bank">Танилцуулгын сан</button><button id="export">CSV татах</button></div>
+<div class="filters"><input id="search" aria-label="Нэрээр хайх" placeholder="Нэрээр хайх"><select id="portfolio" aria-label="Багцаар шүүх"><option value="">Бүх багц</option></select></div>
+<button id="reset-filters" type="button">Шүүлтүүр арилгах</button><p id="notice" role="status"></p><div class="panel"><table><thead><tr><th>Харагдах нэр</th><th>Багц</th><th>Төлөв</th><th>Хуудасны дугаар / холбоос</th><th>Үйлдэл</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main><dialog id="editor"><form id="form"><h2 id="heading">Бүртгэлийн мэдээлэл</h2>
+<label class="field">Харагдах нэр<input name="name" required></label><label class="field">Латин бичлэг<input name="latin"></label><label class="field">Багц<select name="portfolio"></select></label><label class="field">Ангилал<input name="category" required></label><label class="field">Танилцуулга<textarea name="bio"></textarea></label><button type="button" id="random-bio">Санамсаргүй танилцуулга</button><label class="field">Нүүр зураг<input id="photo" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><img id="preview" alt="Зургийн харагдац" width="72" height="72" hidden><button type="button" id="remove-photo">Зураг арилгах</button><label class="field">Төлөв<select name="status"><option value="Draft">Ноорог</option><option value="Rehearsed">Дотоод туршилт</option><option value="Recorded externally">Дугаар бүртгэсэн</option><option value="Mock Page created">Дотоод туршилт</option></select></label><label class="field">Хуудасны дугаар<input name="pageId"></label><label class="field">Хуудасны холбоос<input name="url" type="url"></label>
+<div class="toolbar"><button type="button" id="cancel">Болих</button><button hidden type="button" id="rehearse">Rehearse creation</button><button hidden type="button" id="create-page">Create mock Page</button><button class="primary">Хадгалах</button></div></form></dialog>
+<dialog id="bio-editor"><form id="bio-form"><h2>Танилцуулгын сан</h2><label class="field">Мөр бүрд нэг танилцуулга<textarea id="bio-lines" rows="8" maxlength="20000"></textarea></label><div class="toolbar"><button type="button" id="bio-cancel">Болих</button><button class="primary">Танилцуулгуудыг хадгалах</button></div></form></dialog>
 <script>
 const get = id => document.getElementById(id);
 const fields = ['name','latin','portfolio','category','bio','status','pageId','url','mockPageId'];
@@ -73,12 +73,12 @@ function render(message) {
   const visible = drafts.filter(d => (!portfolio || d.portfolio === portfolio) && (d.name+' '+d.latin).toLocaleLowerCase().includes(query));
   get('account-count').textContent = drafts.length;
   get('portfolio-count').textContent = new Set(drafts.map(draft => draft.portfolio)).size;
-  get('notice').textContent = message || visible.length+' shown / '+drafts.length+' users';
+  get('notice').textContent = message || visible.length+' харагдаж байна / '+drafts.length+' бүртгэл';
   get('rows').replaceChildren();
   if (!visible.length) {
     const cell = get('rows').insertRow().insertCell();
     cell.colSpan = 5;
-    cell.textContent = drafts.length ? 'No accounts match these filters.' : 'Add a user, import a CSV, or load mock users to get started.';
+    cell.textContent = drafts.length ? 'Шүүлтүүрт тохирох бүртгэл алга.' : 'Бүртгэл нэмэх эсвэл CSV файлаас оруулна уу.';
   }
   for (const draft of visible) {
     const row = get('rows').insertRow();
@@ -95,23 +95,23 @@ function render(message) {
     const latin = document.createElement('small');
     latin.textContent = draft.latin;
     name.append(latin);
-    for (const value of [draft.portfolio,draft.status,[draft.mockPageId || draft.pageId,draft.url].filter(Boolean).join(' / ') || '—']) row.insertCell().textContent = value;
+    for (const value of [draft.portfolio,({Draft:'Ноорог',Rehearsed:'Дотоод туршилт','Recorded externally':'Дугаар бүртгэсэн','Mock Page created':'Дотоод туршилт'})[draft.status] || draft.status,[draft.pageId,draft.url].filter(Boolean).join(' / ') || '—']) row.insertCell().textContent = value;
     const button = document.createElement('button');
-    button.textContent = 'Manage';
+    button.textContent = 'Засах';
     button.onclick = () => openDraft(draft);
     row.insertCell().append(button);
   }
 }
 function commit(next, message) {
   try { localStorage.setItem('user-workspace-v1', JSON.stringify(next)); }
-  catch { render('Could not save. Browser storage may be full or disabled.'); return false; }
+  catch { render('Хадгалж чадсангүй. Хөтчийн хадгалах зайг шалгана уу.'); return false; }
   drafts = next;
   render(message);
   return true;
 }
 function openDraft(draft) {
   editing = draft;
-  const values = draft || {portfolio:get('portfolio').value || portfolios[0],category:'General',status:'Draft'};
+  const values = draft ? {...draft, category:draft.category === 'General' ? 'Хувийн блог' : draft.category} : {portfolio:get('portfolio').value || portfolios[0],category:'Хувийн блог',status:'Draft'};
   for (const field of fields) if (form.elements[field]) form.elements[field].value = values[field] || '';
   photoRead = null;
   setPhoto(draft?.photo || '');
@@ -132,7 +132,7 @@ get('photo').onchange = event => {
   if (!file) return;
   if (!['image/png','image/jpeg','image/webp','image/gif'].includes(file.type) || file.size > 250000) {
     event.target.value = '';
-    return alert('Choose a PNG, JPEG, WebP or GIF under 250 KB.');
+    return alert('250 КБ-аас бага PNG, JPEG, WebP эсвэл GIF зураг сонгоно уу.');
   }
   const reader = new FileReader();
   photoRead = reader;
@@ -144,7 +144,7 @@ get('photo').onchange = event => {
   reader.onerror = () => {
     if (photoRead !== reader) return;
     photoRead = null;
-    alert('Could not read the selected photo.');
+    alert('Сонгосон зургийг уншиж чадсангүй.');
   };
   reader.readAsDataURL(file);
 };
@@ -169,7 +169,8 @@ const defaultBios = [
 ];
 const savedBios = JSON.parse(localStorage.getItem(bioKey) || 'null');
 let bios = savedBios === null || JSON.stringify(savedBios) === JSON.stringify(previousDefaultBios)
-  ? defaultBios : savedBios;
+  ? defaultBios : savedBios.filter(bio => !/[a-zA-Z]/.test(bio));
+if (!bios.length) bios = defaultBios;
 get('bio-bank').onclick = () => {
   get('bio-lines').value = bios.join('\n');
   get('bio-editor').showModal();
@@ -178,26 +179,29 @@ get('bio-cancel').onclick = () => get('bio-editor').close();
 get('bio-form').onsubmit = event => {
   event.preventDefault();
   const next = [...new Set(get('bio-lines').value.split(/\r?\n/).map(line => line.trim()).filter(Boolean))];
-  if (next.length > 100) return alert('Save up to 100 bios.');
+  if (next.some(bio => /[a-zA-Z]/.test(bio) || bio.split(/\s+/).length < 3 || bio.split(/\s+/).length > 8 || bio.length > 100)) return alert('Танилцуулга нь монгол хэлээр 3–8 үгтэй, 100 тэмдэгтээс богино байна.');
+  if (next.length > 100) return alert('100 хүртэл танилцуулга хадгална.');
   try { localStorage.setItem(bioKey, JSON.stringify(next)); }
-  catch { return alert('Could not save the bio database.'); }
+  catch { return alert('Танилцуулгын санг хадгалж чадсангүй.'); }
   bios = next;
   get('bio-editor').close();
-  render(bios.length+' bios available.');
+  render(bios.length+' танилцуулга байна.');
 };
 get('random-bio').onclick = () => {
   const field = form.elements.bio;
   const choices = bios.filter(bio => bio !== field.value);
-  if (!bios.length) return alert('Add a bio in Bio database first.');
+  if (!bios.length) return alert('Танилцуулгын санд эхлээд өгүүлбэр нэмнэ үү.');
   if (choices.length) field.value = choices[Math.floor(Math.random()*choices.length)];
 };
 function save(rehearse, createPage = false) {
-  if (photoRead) return alert('Wait for the photo preview before saving.');
+  if (photoRead) return alert('Зураг ачаалж дуусахыг хүлээнэ үү.');
   if (!form.reportValidity()) return;
   const values = Object.fromEntries(fields.map(field => [field,(form.elements[field]?.value || '').trim()]));
   values.photo = photo;
   if (editing?.mockPageId) values.mockPageId = editing.mockPageId;
-  if (!values.name || !values.category) return alert('Enter a Display name and category.');
+  if (values.bio && (/[a-zA-Z]/.test(values.bio) || values.bio.split(/\s+/).length < 3 || values.bio.split(/\s+/).length > 8 || values.bio.length > 100)) return alert('Танилцуулгаа монгол хэлээр 3–8 үгтэй бичнэ үү.');
+  if (values.pageId && (!/^\d+$/.test(values.pageId) || drafts.some(draft => draft !== editing && draft.pageId === values.pageId))) return alert('Хуудасны дугаар зөвхөн цифрээс бүрдэх бөгөөд давхардаж болохгүй.');
+  if (!values.name || !values.category) return alert('Нэр болон ангиллаа оруулна уу.');
   if (createPage) {
     const action = values.mockPageId ? 'Update' : 'Create';
     if (!confirm([action+' mock Page locally?',values.name,values.portfolio,values.category,values.bio || 'No bio'].join('\n'))) return;
@@ -211,7 +215,7 @@ function save(rehearse, createPage = false) {
     if (!confirm([action+' mock user',name,values.portfolio,values.category,values.bio || 'No bio',photo ? 'Profile photo selected' : 'No profile photo'].join('\n'))) return;
     values.status = 'Rehearsed';
   }
-  if (values.status === 'Recorded externally' && !values.pageId && !values.url) return alert('Enter the User ID or URL.');
+  if (values.status === 'Recorded externally' && !values.pageId && !values.url) return alert('Хуудасны дугаар эсвэл холбоос оруулна уу.');
   const next = editing ? drafts.map(draft => draft === editing ? values : draft) : [...drafts,values];
   if (commit(next,rehearse ? 'Rehearsal recorded locally.' : undefined)) editor.close();
 }
@@ -241,7 +245,7 @@ const previousGeneratedBios = new Set(activities.flatMap(activity =>
 ));
 let migrated = false;
 const refreshed = drafts.map(draft => {
-  if (!previousGeneratedBios.has(draft.bio)) return draft;
+  if (!/[a-zA-Z]/.test(draft.bio || '')) return draft;
   migrated = true;
   return {...draft, bio: chooseBio()};
 });
@@ -251,7 +255,7 @@ get('seed').onclick = () => {
     const [a,b] = given.split('|'), [c,d] = family.split('|');
     const variant = j%5;
     const name = variant === 0 ? a+' '+c : variant === 1 ? b+' '+d : variant === 2 ? a+' '+d : variant === 3 ? b+' '+c : j === 4 ? nicknames[i] : nicknames[i]+' '+d;
-    return {name,latin:name === b+' '+d ? '' : b+' '+d,portfolio:portfolios[j%4],category:'General',bio:chooseBio(),status:'Draft',pageId:'',url:''};
+    return {name,latin:name === b+' '+d ? '' : b+' '+d,portfolio:portfolios[j%4],category:'Хувийн блог',bio:chooseBio(),status:'Draft',pageId:'',url:''};
   }));
   const existing = new Set(drafts.map(d => d.name));
   const added = samples.filter(d => !existing.has(d.name));
@@ -281,16 +285,16 @@ get('file').onchange = async event => {
   try {
     const [header,...records] = parseCSV(await file.text());
     const requiredFields = fields.filter(field => field !== 'mockPageId');
-    if (!header || new Set(header).size !== header.length || !header.every(field => fields.includes(field)) || !requiredFields.every(field => header.includes(field))) throw Error('Use the column headers from Export CSV.');
+    if (!header || new Set(header).size !== header.length || !header.every(field => fields.includes(field)) || !requiredFields.every(field => header.includes(field))) throw Error('Татсан CSV файлын баганын нэрийг ашиглана уу.');
     const imported = records.filter(row => row.some(Boolean)).map(row => {
-      if (row.length !== header.length) throw Error('A row has the wrong number of columns.');
+      if (row.length !== header.length) throw Error('Нэг мөрийн баганын тоо буруу байна.');
       const draft = Object.fromEntries(header.map((field,i) => [field,row[i].trim()]));
       if (!draft.name || !draft.category || !portfolios.includes(draft.portfolio) || !statuses.includes(draft.status)) throw Error('Check name, category, portfolio and status for '+(draft.name || 'an unnamed row')+'.');
-      if (draft.status === 'Recorded externally' && !draft.url && !draft.pageId) throw Error('Published entries need an ID or URL.');
+      if (draft.status === 'Recorded externally' && !draft.url && !draft.pageId) throw Error('Нийтэлсэн бүртгэлд дугаар эсвэл холбоос шаардлагатай.');
       if (draft.url && !/^https?:\/\/[^\s]+$/i.test(draft.url)) throw Error('Invalid profile URL for '+draft.name+'.');
       return draft;
     });
-    commit([...drafts,...imported],imported.length+' users imported.');
+    commit([...drafts,...imported],imported.length+' бүртгэл орууллаа.');
   } catch (error) { render(error.message); }
 };
 get('export').onclick = () => {
