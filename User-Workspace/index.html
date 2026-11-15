@@ -154,8 +154,22 @@ get('remove-photo').onclick = () => {
   setPhoto('');
 };
 const bioKey = 'user-workspace-bios-v1';
-const defaultBios = ['Collects postcards and keeps a weekend scrapbook.', 'Photographs stations and writes short travel notes.', 'Repairs old radios and shares progress photos.', 'Sketches city architecture in a pocket notebook.', 'Tracks good cycling routes and shares tips for beginners.'];
-let bios = JSON.parse(localStorage.getItem(bioKey) || 'null') ?? defaultBios;
+const previousDefaultBios = ['Collects postcards and keeps a weekend scrapbook.', 'Photographs stations and writes short travel notes.', 'Repairs old radios and shares progress photos.', 'Sketches city architecture in a pocket notebook.', 'Tracks good cycling routes and shares tips for beginners.'];
+const defaultBios = [
+  'Хөдөө явах дуртай', 'Ээжийн цай хамгийн амттай', 'Өглөө эрт босдог',
+  'Гэртээ ном унших дуртай', 'Ууланд алхах сайхан', 'Өдөр бүр хөгжим сонсдог',
+  'Найзуудтайгаа уулзах дуртай', 'Намрын өнгөнд дуртай', 'Гэрийн хоол хамгийн сайхан',
+  'Голын эрэг дээр суух дуртай', 'Бороотой өдөр цай ууна', 'Аавтайгаа загасанд явдаг',
+  'Цонхоор цас харах сайхан', 'Хашаандаа цэцэг тарьдаг', 'Орой болгон алхдаг',
+  'Эмээгийн хийсэн боорцгонд дуртай', 'Амралтаараа нутаг руугаа явдаг',
+  'Өглөөний нарыг харах дуртай', 'Хуучны дуу сонсох дуртай',
+  'Салхи сэвэлзэх сайхан', 'Удаан алхаж бодлоо цэгцэлдэг',
+  'Амралтын өдөр эрт босдоггүй', 'Хааяа хуучин зургаа үздэг',
+  'Нохойтойгоо орой салхинд гардаг'
+];
+const savedBios = JSON.parse(localStorage.getItem(bioKey) || 'null');
+let bios = savedBios === null || JSON.stringify(savedBios) === JSON.stringify(previousDefaultBios)
+  ? defaultBios : savedBios;
 get('bio-bank').onclick = () => {
   get('bio-lines').value = bios.join('\n');
   get('bio-editor').showModal();
@@ -217,14 +231,27 @@ get('reset-filters').onclick = () => {
 const first = ['Бат|Bat','Наран|Naran','Саруул|Saruul','Тэмүүлэн|Temuulen','Мөнх|Munkh','Ариун|Ariun','Болор|Bolor','Уянга|Uyanga','Энх|Enkh','Хулан|Khulan'];
 const last = ['Эрдэнэ|Erdene','Туяа|Tuya','Баяр|Bayar','Сүрэн|Suren','Дорж|Dorj','Чулуун|Chuluun','Алтан|Altan','Од|Od','Гэрэл|Gerel','Сайхан|Saikhan','Төгс|Tugs','Билэг|Bileg','Дөл|Dul','Заяа|Zayaa','Хишиг|Khishig','Цэцэг|Tsetseg','Тэнгэр|Tenger','Сондор|Sondor','Далай|Dalai','Оргил|Orgil'];
 const nicknames = ['Batuka','Batuna','Naraa','Saraa','Temka','Muuji','Ari','Bolo','Uyaa','Khula'];
+function chooseBio() {
+  return defaultBios[Math.floor(Math.random() * defaultBios.length)];
+}
 const activities = ['collects old street maps','repairs vintage radios','draws city skylines','photographs railway stations','collects postcards','keeps a weather journal','restores old bicycles','makes short travel videos','catalogs used books','sketches local architecture'];
 const details = ['and shares weekend discoveries','and keeps a monthly scrapbook','and writes short field notes','and hosts a small hobby meetup','and posts a photo diary','and keeps a list of favorite spots','and shares tips for beginners','and saves progress photos','and plans a new project each month','and documents the tools used','and trades finds with friends','and shares one update every Friday','and keeps an illustrated notebook','and records a short audio diary','and organizes a seasonal swap','and logs experiments as they happen','and makes simple guides','and tracks new finds on a map','and puts together themed albums','and writes a monthly recap'];
+const previousGeneratedBios = new Set(activities.flatMap(activity =>
+  details.map(detail => 'Mock profile that '+activity+' '+detail+'.')
+));
+let migrated = false;
+const refreshed = drafts.map(draft => {
+  if (!previousGeneratedBios.has(draft.bio)) return draft;
+  migrated = true;
+  return {...draft, bio: chooseBio()};
+});
+if (migrated) commit(refreshed);
 get('seed').onclick = () => {
   const samples = first.flatMap((given,i) => last.map((family,j) => {
     const [a,b] = given.split('|'), [c,d] = family.split('|');
     const variant = j%5;
     const name = variant === 0 ? a+' '+c : variant === 1 ? b+' '+d : variant === 2 ? a+' '+d : variant === 3 ? b+' '+c : j === 4 ? nicknames[i] : nicknames[i]+' '+d;
-    return {name,latin:name === b+' '+d ? '' : b+' '+d,portfolio:portfolios[j%4],category:'General',bio:'Mock profile that '+activities[i]+' '+details[j]+'.',status:'Draft',pageId:'',url:''};
+    return {name,latin:name === b+' '+d ? '' : b+' '+d,portfolio:portfolios[j%4],category:'General',bio:chooseBio(),status:'Draft',pageId:'',url:''};
   }));
   const existing = new Set(drafts.map(d => d.name));
   const added = samples.filter(d => !existing.has(d.name));
