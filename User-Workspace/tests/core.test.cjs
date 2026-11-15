@@ -82,3 +82,28 @@ test('import rolls back the whole batch on invalid records',()=>{
  assert.equal(store.importRecords([sample,sample]),1);
  store.db.close();
 });
+test('roster has 200 unique mixed names and bios and is idempotent',()=>{
+ const {roster}=require('../roster.cjs');
+ const store=openDatabase(':memory:');
+ const rows=roster('Aurant 3',['Personal blog'],store.bios());
+ assert.equal(rows.length,200);
+ assert.equal(new Set(rows.map(r=>r.name)).size,200);
+ assert(rows.every(r=>validBio(r.bio)));
+ assert(rows.some(r=>r.name==='Batuka'));
+ assert(rows.some(r=>r.name==='Batuna'));
+ assert(rows.some(r=>/[А-Яа-я]/.test(r.name)&&/[a-z]/i.test(r.name)));
+ assert.equal(store.importRecords(rows),200);
+ assert.equal(store.importRecords(rows),0);
+ assert(store.list().every(r=>r.status==='draft'&&!r.page_id));
+ store.db.close();
+});
+test('reuses its dedicated browser and recovers a closed tab',async()=>{
+ const engine=new Engine({},'unused');
+ const existing={isClosed:()=>false};
+ engine.page=existing;engine.context={};
+ assert.equal(await engine.browser(),engine.context);
+ assert.equal(engine.page,existing);
+ const recovered={url:()=> 'https://business.facebook.com/latest',setDefaultTimeout:()=>{}};
+ engine.page={isClosed:()=>true};engine.context={pages:()=>[recovered]};
+ await engine.browser();assert.equal(engine.page,recovered);
+});

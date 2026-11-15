@@ -8,13 +8,18 @@
 <main>
 <section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
 <p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
-<p>Meta хөтөч нээгээд нэвтэрнэ үү. Дараа нь зөв бизнесийн багцаа сонгож, «Manage Pages» цэсийг харагдуулна уу. Бүртгэлд тухайн багцын нэрийг яг адил бичнэ.</p>
+<p>Meta хөтөч нээгээд нэг удаа нэвтэрнэ үү. Нэвтрэлт энэ компьютер дээр хадгалагдана. Дараа нь зөв бизнесийн багцаа сонгож, «Manage Pages» цэсийг харагдуулна уу. Бүртгэлд тухайн багцын нэрийг яг адил бичнэ.</p>
 <button id="browser" class="primary">Meta хөтөч нээх</button></section>
-<div class="bar"><button id="add" class="primary">Бүртгэл нэмэх</button><button id="bios">Танилцуулгын сан</button><button id="export">Бүртгэл татах</button><button id="import">Бүртгэл оруулах</button><input type="file" id="file" accept=".json" hidden></div>
+<div class="bar"><button id="add" class="primary">Бүртгэл нэмэх</button><button id="seed">200 нэр, танилцуулга нэмэх</button><button id="bios">Танилцуулгын сан</button><button id="export">Бүртгэл татах</button><button id="import">Бүртгэл оруулах</button><input type="file" id="file" accept=".json" hidden></div>
 <input id="search" placeholder="Нэр, багц эсвэл дугаараар хайх" aria-label="Хайх">
 <p id="notice" role="status"></p>
 <div class="table"><table><thead><tr><th>Нэр / танилцуулга</th><th>Бизнесийн багц</th><th>Төлөв</th><th>Хуудасны дугаар</th><th>Үйлдэл</th></tr></thead><tbody id="rows"></tbody></table></div>
 </main>
+<dialog id="roster-dialog"><form id="roster-form"><h2>Нэр, танилцуулгын жагсаалт</h2>
+<label>Бизнесийн багцын нэр<input name="portfolio" required placeholder="Aurant 3"></label>
+<label>Тохирох ангиллууд<textarea name="categories" required></textarea></label>
+<small>Кирилл, латин, холимог болон богино нэртэй 200 ноорог нэмнэ. Танилцуулгын сангаас 3–8 үгтэй өгүүлбэр сонгоно. Давхардсан нэрийг тухайн багцад дахин нэмэхгүй.</small>
+<div class="bar"><button class="primary">Жагсаалт нэмэх</button><button type="button" data-close="roster-dialog">Болих</button></div></form></dialog>
 <dialog id="editor"><form id="form"><h2>Бүртгэлийн мэдээлэл</h2>
 <label>Хуудасны нэр<input name="name" maxlength="100" required></label>
 <label>Бизнесийн багцын нэр<input name="portfolio" required placeholder="Aurant 3"></label>
@@ -70,12 +75,12 @@ async function refresh(){
  try{
   state=await api('state');connected=true;
   $('connection').textContent=state.busy?'Ажиллагаа явагдаж байна.':state.browser?'Meta хөтөч нээлттэй. Нэвтрэлт болон сонгосон багцаа шалгана уу.':'Компьютерийн мэдээллийн сантай холбогдлоо.';
-  for(const id of ['add','bios','export','import','browser']) $(id).disabled=false;
+  for(const id of ['add','seed','bios','export','import','browser']) $(id).disabled=false;
   render();
  }catch{
   connected=false;
   $('connection').textContent='Энэ хуудас компьютер дээр ажиллана. Төслийн хавтсаас START-WINDOWS.cmd файлыг ажиллуулаад http://127.0.0.1:4173 хаягийг нээнэ үү.';
-  for(const id of ['add','bios','export','import','browser']) $(id).disabled=true;
+  for(const id of ['add','seed','bios','export','import','browser']) $(id).disabled=true;
  }
 }
 function openEditor(p){
@@ -85,6 +90,12 @@ function openEditor(p){
  $('editor').showModal();
 }
 $('add').onclick=()=>openEditor();
+$('seed').onclick=()=>$('roster-dialog').showModal();
+$('roster-form').onsubmit=event=>{event.preventDefault();run(async()=>{
+ const f=$('roster-form').elements;
+ const result=await api('roster',{portfolio:f.portfolio.value,categories:f.categories.value.split(/\r?\n/).map(c=>c.trim()).filter(Boolean)});
+ $('roster-dialog').close();notice(result.count+' ноорог нэмлээ.');
+});};
 $('browser').onclick=()=>run(()=>api('browser',{}));
 $('search').oninput=render;
 $('random').onclick=()=>{

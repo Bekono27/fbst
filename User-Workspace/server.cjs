@@ -4,6 +4,7 @@ const path=require('node:path');
 const {randomBytes}=require('node:crypto');
 const {openDatabase}=require('./database.cjs');
 const {Engine}=require('./engine.cjs');
+const {roster}=require('./roster.cjs');
 function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
   fs.mkdirSync(directory,{recursive:true});
   const store=openDatabase(path.join(directory,'workforce.sqlite'));
@@ -29,6 +30,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
       const body=raw?JSON.parse(raw):{};
       if(req.method!=='POST') return json(405,{error:'Дэмжигдээгүй үйлдэл.'});
       switch(pathname) {
+        case '/api/roster': return json(200,{count:store.importRecords(roster(body.portfolio,body.categories,store.bios()))});
         case '/api/import': return json(200,{count:store.importRecords(body.records)});
         case '/api/save': return json(200,store.save(body));
         case '/api/bios': store.saveBios(body.bios); return json(200,{ok:true});
