@@ -26,11 +26,32 @@ dialog{border:1px solid #b6ccef;border-radius:16px;width:min(510px,94vw);color:#
 dialog::backdrop{background:#10234daa}
 label.field{display:grid;gap:4px;margin:10px 0}
 textarea{min-height:75px}
-</style><header>User Workspace</header><main>
-<section class="hero"><h1>User directory</h1><p>Manage mock users and rehearse profile changes across four portfolios.</p></section>
+
+body{background:#282a27;color:#e9e7df;font-family:"Instrument Sans",system-ui,sans-serif}
+header{background:#191b19;border-bottom:1px solid #383b35;color:#e9e7df;letter-spacing:.14em;font-size:13px}
+.hero{background:linear-gradient(120deg,#20221f,#464840);border:1px solid #53564d;border-radius:16px}
+.hero p,small{color:#c3c5b9}
+button,select,input,textarea{background:#30332e;color:#eeeae1;border-color:#64685b}
+button:hover{background:#43473e}
+button.primary{background:#c9d2b3;border-color:#c9d2b3;color:#22281c}
+button.primary:hover{background:#dce3cd}
+:focus-visible{outline-color:#c9d2b3}
+.panel{background:#30322e;border-color:#52564b}
+th{background:#383b35;color:#e2e4d7}
+th,td{border-bottom-color:#46493f}
+tbody tr:nth-child(even){background:#343730}
+dialog{background:#282b26;color:#eeeae1;border-color:#666b5d}
+dialog::backdrop{background:#11130fd9}
+.metrics{display:flex;flex-wrap:wrap;gap:24px;margin-top:22px}
+.metrics span{display:grid;gap:3px;color:#c3c5b9;font-size:13px}
+.metrics strong{font-size:24px;color:#f3f1e9}
+#notice{color:#c3c5b9}
+@media(max-width:580px){main{padding:16px 12px}.filters>*{width:100%}.toolbar>*{flex:1 1 auto}}
+</style><header>AURANT / SOCIAL STUDIO</header><main>
+<section class="hero"><h1>Account maintenance</h1><p>Review profiles and keep account details up to date across your portfolios.</p><div class="metrics"><span><strong id="account-count">0</strong>Accounts</span><span><strong id="portfolio-count">0</strong>Active portfolios</span></div></section>
 <div class="toolbar"><button class="primary" id="add">New user</button><button id="seed">Load 200 mock users</button><button id="upload">Import CSV</button><input id="file" type="file" accept=".csv" hidden><button id="bio-bank">Bio database</button><button id="export">Export CSV</button></div>
-<div class="filters"><input id="search" aria-label="Search names" placeholder="Search names"><select id="portfolio" aria-label="Filter by portfolio"><option value="">All portfolios</option></select></div>
-<p id="notice" role="status"></p><div class="panel"><table><thead><tr><th>Display name</th><th>Portfolio</th><th>Status</th><th>User ID / Profile URL</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="filters"><input id="search" aria-label="Search names" placeholder="Search display names"><select id="portfolio" aria-label="Filter by portfolio"><option value="">All portfolios</option></select></div>
+<button id="reset-filters" type="button">Clear filters</button><p id="notice" role="status"></p><div class="panel"><table><thead><tr><th>Display name</th><th>Portfolio</th><th>Status</th><th>User ID / Profile URL</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
 </main><dialog id="editor"><form id="form"><h2 id="heading">User profile</h2>
 <label class="field">Display name<input name="name" required></label><label class="field">Latin spelling<input name="latin"></label><label class="field">Portfolio<select name="portfolio"></select></label><label class="field">Category<input name="category" required></label><label class="field">Bio<textarea name="bio"></textarea></label><button type="button" id="random-bio">Random bio</button><label class="field">Profile photo<input id="photo" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><img id="preview" alt="Profile photo preview" width="72" height="72" hidden><button type="button" id="remove-photo">Remove photo</button><label class="field">Status<select name="status"><option>Draft</option><option>Rehearsed</option><option>Recorded externally</option><option>Mock Page created</option></select></label><label class="field">User ID<input name="pageId"></label><label class="field">Profile URL<input name="url" type="url"></label>
 <div class="toolbar"><button type="button" id="cancel">Cancel</button><button type="button" id="rehearse">Rehearse creation</button><button type="button" id="create-page">Create mock Page</button><button class="primary">Save user</button></div></form></dialog>
@@ -50,8 +71,15 @@ function render(message) {
   const query = get('search').value.trim().toLocaleLowerCase();
   const portfolio = get('portfolio').value;
   const visible = drafts.filter(d => (!portfolio || d.portfolio === portfolio) && (d.name+' '+d.latin).toLocaleLowerCase().includes(query));
+  get('account-count').textContent = drafts.length;
+  get('portfolio-count').textContent = new Set(drafts.map(draft => draft.portfolio)).size;
   get('notice').textContent = message || visible.length+' shown / '+drafts.length+' users';
   get('rows').replaceChildren();
+  if (!visible.length) {
+    const cell = get('rows').insertRow().insertCell();
+    cell.colSpan = 5;
+    cell.textContent = drafts.length ? 'No accounts match these filters.' : 'Add a user, import a CSV, or load mock users to get started.';
+  }
   for (const draft of visible) {
     const row = get('rows').insertRow();
     const name = row.insertCell();
@@ -180,6 +208,11 @@ get('cancel').onclick = () => editor.close();
 get('add').onclick = () => openDraft();
 get('search').oninput = () => render();
 get('portfolio').onchange = () => render();
+get('reset-filters').onclick = () => {
+  get('search').value = '';
+  get('portfolio').value = '';
+  render();
+};
 
 const first = ['Бат|Bat','Наран|Naran','Саруул|Saruul','Тэмүүлэн|Temuulen','Мөнх|Munkh','Ариун|Ariun','Болор|Bolor','Уянга|Uyanga','Энх|Enkh','Хулан|Khulan'];
 const last = ['Эрдэнэ|Erdene','Туяа|Tuya','Баяр|Bayar','Сүрэн|Suren','Дорж|Dorj','Чулуун|Chuluun','Алтан|Altan','Од|Od','Гэрэл|Gerel','Сайхан|Saikhan','Төгс|Tugs','Билэг|Bileg','Дөл|Dul','Заяа|Zayaa','Хишиг|Khishig','Цэцэг|Tsetseg','Тэнгэр|Tenger','Сондор|Sondor','Далай|Dalai','Оргил|Orgil'];
