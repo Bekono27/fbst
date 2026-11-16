@@ -1,3 +1,7 @@
+## Existing bektas Chrome profile
+
+The default local engine now uses the bundled Chrome extension and your selected, already-open Meta Business Suite tab. Start with [CHROME-EXTENSION-SETUP.md](CHROME-EXTENSION-SETUP.md). It no longer opens a separate automation browser. Older browser-launch instructions below are superseded by that guide.
+
 # AURANT
 
 One interface: `index.html` at the repository root. The local Node server serves this same file.

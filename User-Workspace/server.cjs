@@ -4,6 +4,7 @@ const path=require('node:path');
 const {randomBytes}=require('node:crypto');
 const {openDatabase}=require('./database.cjs');
 const {Engine}=require('./engine.cjs');
+const {ExtensionEngine}=require('./extension-engine.cjs');
 const {roster}=require('./roster.cjs');
 const {groupStore}=require('./groups.cjs');
 const {createSync}=require('./sync.cjs');
@@ -11,7 +12,7 @@ const {createGithubSync}=require('./github-sync.cjs');
 function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
   fs.mkdirSync(directory,{recursive:true});
   const store=openDatabase(path.join(directory,'workforce.sqlite'));
-  const engine=new Engine(store,directory,chromium);
+  const engine=chromium?new Engine(store,directory,chromium):new ExtensionEngine(store);
   const groups=groupStore(store.db);
   const sync=createSync(directory,()=>({pages:store.list(),groups:groups.list(),bios:store.bios()}));
 
@@ -31,9 +32,32 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
         return res.end(fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
       }
       if(req.method==='GET'&&['/platform.js','/group-import.js','/catalog-data.js','/catalog.js'].includes(pathname)){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..',pathname.slice(1))));}
+      if(pathname.startsWith('/api/extension/')) {
+        if(!(engine instanceof ExtensionEngine))return json(400,{error:'Extension mode unavailable.'});
+        const origin=req.headers.origin,extension=req.headers['x-aurant-extension'];
+        if(origin&&!/^chrome-extension:\/\/[a-p]{32}$/.test(origin))return json(403,{error:'Extension origin required.'});
+        if(origin){res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Vary','Origin');}
+        if(req.method==='OPTIONS'){
+          if(!origin)return json(403,{error:'Origin required.'});
+          res.setHeader('Access-Control-Allow-Methods','POST');
+          res.setHeader('Access-Control-Allow-Headers','Content-Type, X-Workforce-Token, X-Aurant-Extension');
+          res.writeHead(204);return res.end();
+        }
+        if(req.method!=='POST'||req.headers['x-workforce-token']!==token||! /^[a-p]{32}$/.test(extension||'')||(origin&&origin!=='chrome-extension://'+extension))return json(403,{error:'Холболтын эрхгүй.'});
+        let input='';for await(const chunk of req){input+=chunk;if(input.length>16000)throw Error('Хүсэлт хэт том.');}
+        const body=JSON.parse(input||'{}');
+        switch(pathname){
+          case '/api/extension/pair':return json(200,engine.pair(extension,body.tabId));
+          case '/api/extension/poll':return json(200,engine.poll(extension,body.tabId));
+          case '/api/extension/progress':return json(200,engine.progress(extension,body));
+          case '/api/extension/result':return json(200,engine.result(extension,body));
+          case '/api/extension/disconnect':return json(200,engine.disconnect(extension,body.tabId));
+          default:return json(404,{error:'Олдсонгүй.'});
+        }
+      }
       if(!pathname.startsWith('/api/')) return json(404,{error:'Олдсонгүй.'});
       if(req.headers['x-workforce-token']!==token || (req.headers.origin && req.headers.origin!=='http://'+host)) return json(403,{error:'Холболтын эрхгүй.'});
-      if(req.method==='GET' && pathname==='/api/state') return json(200,{pages:store.list(),bios:store.bios(),busy:engine.busy,active:engine.active,browser:!!engine.context,groups:groups.list(),sync:sync.status(),github:github.status()});
+      if(req.method==='GET' && pathname==='/api/state') return json(200,{pages:store.list(),bios:store.bios(),busy:engine.busy,active:engine.active,browser:!!engine.context,groups:groups.list(),sync:sync.status(),github:github.status(),extension:engine.status?.()});
       let raw='';
       for await(const chunk of req) {raw+=chunk;if(raw.length>1000000) throw Error('Файл хэт том байна.');}
       const body=raw?JSON.parse(raw):{};
@@ -60,7 +84,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
       }
     } catch(error) {json(400,{error:error.message});}
   });
-  server.on('close',()=>{sync.close();github.close();});
+  server.on('close',()=>{sync.close();github.close();engine.close?.();});
   server.on('error',error=>{
     console.error(error.code === 'EADDRINUSE'
       ? '4173 порт ашиглагдаж байна. Өмнөх Workforce цонхоо шалгана уу.'

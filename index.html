@@ -12,8 +12,8 @@
 <div id="page-panel">
 <section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
 <p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
-<p>Meta хөтөч нээгээд нэг удаа нэвтэрнэ үү. Нэвтрэлт энэ компьютер дээр хадгалагдана. Дараа нь зөв бизнесийн багцаа сонгож, «Manage Pages» цэсийг харагдуулна уу. Бүртгэлд тухайн багцын нэрийг яг адил бичнэ.</p>
-<button id="browser" class="primary">Meta хөтөч нээх</button></section>
+<p>bektas профайл дахь Meta Business Suite tab-аа AURANT extension-ээр холбоно уу. Систем бүртгэлд заасан бизнесийн багцыг сонгоно. Багцын нэрийг Meta дээрхтэй яг адил бичнэ.</p>
+<details style="margin:16px 0"><summary>bektas Chrome extension суулгах</summary><ol><li>bektas профайлд chrome://extensions нээнэ.</li><li>Developer mode → Load unpacked → төслийн chrome-extension хавтсыг сонгоно.</li><li>Meta Business Suite tab-аа нээгээд AURANT extension-ийн “Энэ Meta tab-ийг холбох” товчийг дарна.</li><li>Энд бүртгэлээ сонгоод Page үүсгэх үйлдлийг эхлүүлнэ.</li></ol><p>Нэг удаад нэг tab, нэг ажил. Өөр Chrome профайл нээхгүй. Апп дахин эхэлбэл extension-ээс дахин холбоно. Like / Comment / Share энэ extension-д байхгүй.</p></details><button id="browser" class="primary">Meta tab холболт шалгах</button></section>
 <div class="bar"><button id="add" class="primary">Бүртгэл нэмэх</button><button id="seed">200 нэр, танилцуулга нэмэх</button><button id="bios">Танилцуулгын сан</button><button id="export">Бүртгэл татах</button><button id="import">Бүртгэл оруулах</button><input type="file" id="file" accept=".json" hidden></div>
 <input id="search" placeholder="Нэр, багц эсвэл дугаараар хайх" aria-label="Хайх">
 <p id="notice" role="status"></p>
@@ -127,7 +127,7 @@ function render(){
 async function refresh(){
  try{
   state=await api('state');connected=true;
-  $('connection').textContent=state.busy?'Ажиллагаа явагдаж байна.':state.browser?'Meta хөтөч нээлттэй. Нэвтрэлт болон сонгосон багцаа шалгана уу.':'Компьютерийн мэдээллийн сантай холбогдлоо.';
+  $('connection').textContent=state.busy?'Ажиллагаа явагдаж байна.':state.browser?'bektas · Сонгосон Meta tab холбогдсон.':'Локал сан холбогдсон. bektas дахь Meta tab-аа AURANT extension-ээр холбоно уу.';
   for(const id of ['add','seed','bios','export','import']) $(id).disabled=false;
   render();
  }catch{

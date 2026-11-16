@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "AURANT · bektas Meta connection",
+  "version": "1.0.0",
+  "description": "Connect the selected Meta Business Suite tab to your local AURANT app.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*",
+    "https://business.facebook.com/*"
+  ],
+  "background": {
+    "service_worker": "worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://business.facebook.com/*"
+      ],
+      "js": [
+        "meta.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
