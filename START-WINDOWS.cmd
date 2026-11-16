@@ -11,6 +11,7 @@ if errorlevel 1 (
  echo Node.js 24 or newer is required.
  goto failed
 )
+node "..\update-code.cjs"
 call npm install
 if errorlevel 1 goto failed
 node server.cjs --open

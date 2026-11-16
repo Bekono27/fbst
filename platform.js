@@ -33,3 +33,21 @@ async function readOnline(){if(!online)return;const response=await fetch(online.
 $('sync-form').onsubmit=e=>{e.preventDefault();perform(async()=>{const f=$('sync-form').elements,url=new URL(f.endpoint.value);if(url.protocol!=='https:'||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw Error('Серверийн үндсэн HTTPS хаяг шаардлагатай.');if(isLocal){await api('sync/configure',{endpoint:url.origin,key:f.key.value});f.key.value='';await api('sync/run',{});await refresh();groupRender();}else{online={endpoint:url.origin,key:f.key.value};f.key.value='';await readOnline();}});};
 $('sync-now').onclick=()=>perform(async()=>{await api('sync/run',{});await refresh();groupRender();});$('sync-refresh').onclick=()=>perform(readOnline);
 groupRender();
+
+const githubNotice=document.createElement('p');$('sync-panel').append(githubNotice);
+window.addEventListener('aurant-state',()=>{const g=state.github;if(g)githubNotice.textContent=g.enabled?(g.lastError||('GitHub: '+(g.lastSuccess||'Хүлээгдэж байна'))):'GitHub нийтлэх: START-PUBLISHING-WINDOWS.cmd файлыг ажиллуулна уу.';});
+if(!isLocal){
+ async function readPublicRecords(){
+  if(online)return;
+  try{
+   const response=await fetch('./public-records.json',{cache:'no-store'});
+   if(!response.ok)throw Error('Public records unavailable');
+   const data=await response.json();
+   if(online)return;
+   state={...state,pages:data.pages||[],groups:data.groups||[],busy:false};
+   render();for(const b of $('rows').querySelectorAll('button'))b.remove();
+   $('browser').disabled=true;groupRender();
+  }catch{tell('Нийтлэгдсэн мэдээллийг шинэчилж чадсангүй.');}
+ }
+ void readPublicRecords();setInterval(readPublicRecords,60000);
+}
