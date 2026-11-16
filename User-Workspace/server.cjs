@@ -71,9 +71,8 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
     const url='http://127.0.0.1:'+server.address().port;
     console.log('Workforce: '+url);
     if (process.platform === 'win32' && process.argv.includes('--open')) {
-      require('node:child_process').execFile('cmd.exe',['/d','/s','/c','start "" '+url],error=>{
-        if(error) console.log('Хөтөч дээр энэ хаягийг нээнэ үү: '+url);
-      });
+      try {require('./chrome-profile.cjs').openBektas(url);}
+      catch(error){console.error(error.message);console.log('Open '+url+' manually in the bektas Chrome profile.');}
     }
   });
   return {server,store,engine};
