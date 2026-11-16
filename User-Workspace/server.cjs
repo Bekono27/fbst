@@ -20,7 +20,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
       const pathname=new URL(req.url,'http://'+host).pathname;
       if(req.method==='GET' && pathname==='/') {
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
-        return res.end(fs.readFileSync(path.join(__dirname,'index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
+        return res.end(fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
       }
       if(!pathname.startsWith('/api/')) return json(404,{error:'Олдсонгүй.'});
       if(req.headers['x-workforce-token']!==token || (req.headers.origin && req.headers.origin!=='http://'+host)) return json(403,{error:'Холболтын эрхгүй.'});

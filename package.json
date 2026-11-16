@@ -1,1 +1,10 @@
-{"name":"chefpages","version":"1.0.0","private":true,"scripts":{"start":"node server.cjs","test":"playwright test"},"devDependencies":{"@playwright/test":"^1.51.0"}}
+{
+  "name": "aurant-workforce",
+  "version": "2.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node User-Workspace/server.cjs --open",
+    "test": "npm --prefix User-Workspace test",
+    "setup": "npm --prefix User-Workspace install"
+  }
+}
