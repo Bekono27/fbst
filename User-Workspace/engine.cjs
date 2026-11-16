@@ -45,17 +45,38 @@ class Engine {
     this.task=this.create(row).finally(()=>{this.busy=false;this.active=null;});
     return this.store.get(id);
   }
+  async selectPortfolio(row) {
+    const search=this.page.getByPlaceholder(/Search for a business asset|Бизнесийн хөрөнгө хайх/i).filter({visible:true});
+    this.store.state(row.id,'opening','Бизнесийн багц сонгож байна: '+row.portfolio);
+    if (!(await search.count())) {
+      const switcher=this.page.getByRole('button',{name:/Select (a )?(business asset|business|portfolio)|Switch (business|portfolio)|Business portfolio selector|Бизнесийн багц сонгох/i}).filter({visible:true});
+      if(await switcher.count()!==1) throw Error('Бизнесийн багцын цэсийг нээнэ үү. Дараа нь систем багцыг өөрөө сонгоно.');
+      await switcher.click();
+    }
+    await search.first().waitFor({state:'visible'});
+    // Clear a previous asset search so the requested portfolio is not hidden.
+    await search.first().fill('');
+    const matches=this.page.getByText(row.portfolio,{exact:true}).filter({visible:true});
+    await matches.first().waitFor({state:'visible'});
+    // The left portfolio entry precedes the right detail-panel heading.
+    await matches.first().click();
+    const manage=this.page.getByRole('button',{name:/Manage Pages|Хуудсуудыг удирдах/i}).filter({visible:true});
+    await manage.waitFor({state:'visible'});
+    // Verify the portfolio name in the detail pane, not merely in the list.
+    const panel=manage.locator('xpath=ancestor::*')
+      .filter({has:this.page.getByText(row.portfolio,{exact:true})})
+      .filter({hasNot:this.page.getByPlaceholder(/Search for a business asset|Бизнесийн хөрөнгө хайх/i)});
+    await panel.first().waitFor({state:'visible',timeout:8000});
+    this.store.state(row.id,'opening','Багц сонгогдлоо: '+row.portfolio+' · Хуудас үүсгэх маягт нээж байна.');
+    await manage.click();
+    await this.page.getByText(/Create a new Facebook Page|Шинэ Facebook хуудас үүсгэх/i).filter({visible:true}).click();
+    await this.page.getByLabel(/Page name|Хуудасны нэр/i).waitFor({state:'visible'});
+  }
   async create(row) {
     let submitted=false;
     try {
       await this.browser(); await this.page.bringToFront(); await this.guard();
-      // The selected portfolio must be visible before any form is changed.
-      const portfolio = this.page.getByText(row.portfolio,{exact:true}).filter({visible:true});
-      await portfolio.first().waitFor({state:'visible'});
-      if (!(await this.page.getByRole('dialog').count())) {
-        await this.page.getByRole('button',{name:/Manage Pages|Хуудсуудыг удирдах/i}).click();
-        await this.page.getByText(/Create a new Facebook Page|Шинэ Facebook хуудас үүсгэх/i).click();
-      }
+      await this.selectPortfolio(row);
       const dialog = this.page.getByRole('dialog');
       const scope = await dialog.count() === 1 ? dialog : this.page;
       this.store.state(row.id,'filling','Нэр, ангилал, танилцуулгыг бөглөж байна.');
@@ -87,7 +108,7 @@ class Engine {
     } catch(error) {
       this.store.state(row.id,submitted?'review':'failed',submitted
         ? 'Үр дүнг шалгах шаардлагатай. Meta дээр хуудас үүссэн эсэхийг шалгаж дугаарыг татна уу.'
-        : 'Бөглөх алхам дууссангүй. Meta дээр сонгосон бизнесийн багц, нэвтрэлт болон маягтыг шалгана уу.');
+        : 'Алхам дууссангүй: '+String(error.message||'Тодорхойгүй алдаа').split('\n')[0].slice(0,400));
     }
   }
   async collect(id) {
