@@ -45,14 +45,46 @@ class Engine {
     this.task=this.create(row).finally(()=>{this.busy=false;this.active=null;});
     return this.store.get(id);
   }
+  async openPortfolioMenu(row) {
+    const search=this.page.getByPlaceholder(/Search for a business asset|Бизнесийн хөрөнгө хайх/i).filter({visible:true});
+    if(await search.count()) return;
+    this.store.state(row.id,'opening','Бизнесийн сонгогчийг автоматаар хайж байна.');
+    // Meta sometimes labels the selector with the CURRENT Page name rather than
+    // "Select business asset". Use accessibility first, then the visible
+    // top-left asset card (avatar + dropdown) without guessing a Page name.
+    const named=this.page.getByRole('button',{name:/Select (a )?(business asset|business|portfolio)|Switch (business|portfolio)|Business portfolio selector|Бизнесийн багц сонгох/i}).filter({visible:true});
+    if(await named.count()===1) {
+      await named.click();
+    } else {
+      await this.page.locator('button,[role="button"]').first().waitFor({state:'visible'});
+      const candidates=await this.page.locator('button,[role="button"]').evaluateAll(elements=>{
+        return elements.map((el,index)=>{
+          const r=el.getBoundingClientRect(),style=getComputedStyle(el);
+          const text=(el.getAttribute('aria-label')||el.textContent||'').trim();
+          const popup=el.hasAttribute('aria-haspopup')||el.hasAttribute('aria-expanded');
+          const avatar=!!el.querySelector('img,image,[role="img"]');
+          const icon=!!el.querySelector('svg,i');
+          const enabled=!el.disabled&&el.getAttribute('aria-disabled')!=='true';
+          const visible=r.width>0&&r.height>0&&style.visibility!=='hidden'&&style.display!=='none';
+          // Limit discovery to the asset card underneath the Business Suite logo.
+          const position=r.left>=0&&r.left<340&&r.top>=20&&r.top<190;
+          const size=r.width>=100&&r.width<=380&&r.height>=28&&r.height<=100;
+          const forbidden=/create|publish|delete|remove|post|ad center|notification|help|settings|search|үүсгэх|устгах/i.test(text);
+          return {index,score:(popup?4:0)+(avatar?4:0)+(icon?1:0),
+            eligible:visible&&enabled&&position&&size&&!forbidden&&text.length>0&&text.length<160&&(popup||avatar&&icon)};
+        }).filter(c=>c.eligible).sort((a,b)=>b.score-a.score);
+      });
+      if(!candidates.length||candidates.length>1&&candidates[0].score===candidates[1].score)
+        throw Error('Бизнесийн сонгогчийг ялгаж таньж чадсангүй. Meta интерфэйсийн бүтэц өөрчлөгдсөн байна; үйлдэл илгээгээгүй.');
+      await this.page.locator('button,[role="button"]').nth(candidates[0].index).click();
+    }
+    // A click is not a successful selection unless the asset menu actually opens.
+    await search.first().waitFor({state:'visible',timeout:12000});
+  }
   async selectPortfolio(row) {
     const search=this.page.getByPlaceholder(/Search for a business asset|Бизнесийн хөрөнгө хайх/i).filter({visible:true});
     this.store.state(row.id,'opening','Бизнесийн багц сонгож байна: '+row.portfolio);
-    if (!(await search.count())) {
-      const switcher=this.page.getByRole('button',{name:/Select (a )?(business asset|business|portfolio)|Switch (business|portfolio)|Business portfolio selector|Бизнесийн багц сонгох/i}).filter({visible:true});
-      if(await switcher.count()!==1) throw Error('Бизнесийн багцын цэсийг нээнэ үү. Дараа нь систем багцыг өөрөө сонгоно.');
-      await switcher.click();
-    }
+    await this.openPortfolioMenu(row);
     await search.first().waitFor({state:'visible'});
     // Clear a previous asset search so the requested portfolio is not hidden.
     await search.first().fill('');
