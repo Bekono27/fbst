@@ -25,9 +25,29 @@
 <h1 id="automation-title">Automation</h1>
 <p>Үйлдлийн хяналтын систем дараа нэмэгдэнэ.</p>
 <div class="bar" aria-label="Automation actions"><button type="button" disabled aria-describedby="automation-placeholder">Like</button><button type="button" disabled aria-describedby="automation-placeholder">Comment</button><button type="button" disabled aria-describedby="automation-placeholder">Share</button></div>
-<p id="automation-placeholder">Одоогоор зөвхөн хэсгийн загвар. Үйлдлүүд идэвхгүй.</p>
+<p id="automation-placeholder">Like, Comment, Share хөгжүүлэлт хүлээгдэж байна. Төсөв тооцох нь үйлдлүүдийг идэвхжүүлэхгүй.</p>
+<h2>Үйлдлийн зардал ба төлөв</h2><div style="overflow-x:auto"><table><thead><tr><th>Үйлдэл</th><th>Төлөв</th><th>Зардал</th></tr></thead><tbody>
+<tr><td>Like / Comment / Share</td><td>Удахгүй</td><td>Нэг үйлдлийн үнэ тогтоогоогүй</td></tr>
+<tr><td>Page үүсгэх</td><td>Локал хөдөлгүүр · бодит ажиллагааны баталгаажуулалт хүлээгдэж байна</td><td>Дата + компьютер / серверийн зардал</td></tr>
+</tbody></table></div>
+<p>Нэг амжилттай үйлдлийн өртөг = тухайн ажлын дата ба ажиллуулах зардал ÷ амжилттай үйлдлийн тоо. Дахин оролдлого ч дата зарцуулна. Одоогоор хэмжилт байхгүй тул тогтмол нэгж үнэ амлахгүй.</p>
+<h2>Сарын төсвийн жишээ</h2><p>Decodo $4 / GB Pay As You Go: 1 GB → $4; 10 GB → $40; 25 GB → $100. Сервер, татвар болон бусад зардал нэмэгдэнэ. Эдгээр хэмжээ нь үйлдлийн тоог илэрхийлэхгүй.</p>
+<p><a href="https://decodo.com/proxies/residential-proxies/pricing" target="_blank" rel="noopener noreferrer">Үнийн эх сурвалж ↗</a> · 2026-11-17</p>
+<button type="button" id="open-proxy-budget">Прокси ба төсөв тооцоолох</button>
 </section>
-<section id="proxies-panel" class="hero" hidden aria-labelledby="proxies-title"><h1 id="proxies-title">Proxy Channels</h1><p>Прокси сувгийн удирдлагын хэсэг дараа нэмэгдэнэ.</p></section>
+<section id="proxies-panel" class="hero" hidden aria-labelledby="proxies-title"><h1 id="proxies-title">Proxy Channels</h1>
+<p>Прокси үйлчилгээ ба ашиглалтын төсөв</p><p>Эдгээр нь үйлчилгээ үзүүлэгчийн санал. AURANT-д холбогдсон идэвхтэй прокси байхгүй. Бүртгэл, төлбөрөө үйлчилгээ үзүүлэгч дээр хийж холболтын мэдээллээ авна. AURANT-ийн прокси холболтын тохиргоо дараа нэмэгдэнэ.</p>
+<div class="proxy-options"><article class="proxy-option"><h2>Webshare · Free</h2><p class="cost-price">$0 / сар</p><p>10 shared proxy, 1 GB / сар.</p><a href="https://www.webshare.io/pricing" target="_blank" rel="noopener noreferrer">Үнэ ба бүртгэл ↗</a></article><article class="proxy-option"><h2>Webshare · Datacenter</h2><p class="cost-price">$2.99 / сараас</p><p>100 shared proxy. Багцын дата болон хэрэглээний нөхцөлийг шалгана.</p><a href="https://www.webshare.io/proxy-server" target="_blank" rel="noopener noreferrer">Үнэ ба бүртгэл ↗</a></article><article class="proxy-option"><h2>Webshare · Static ISP</h2><p class="cost-price">$6 / сараас</p><p>20 static residential proxy. Байршил, IP-ийн бэлэн байдлыг шалгана.</p><a href="https://www.webshare.io/pricing" target="_blank" rel="noopener noreferrer">Үнэ ба бүртгэл ↗</a></article><article class="proxy-option"><h2>Decodo · Residential</h2><p class="cost-price">$4 / GB + VAT</p><p>Pay As You Go. Сарын багц: 3 GB → $11.25; 10 GB → $35, VAT нэмэгдэнэ.</p><a href="https://decodo.com/proxies/residential-proxies/pricing" target="_blank" rel="noopener noreferrer">Үнэ ба бүртгэл ↗</a></article></div>
+<p>Үнэ шалгасан: 2026-11-17 · USD. Үнэ, татвар, урамшуулал өөрчлөгдөж болно. Facebook дээр ажиллах эсэх болон Монгол IP-ийн бэлэн байдлыг баталгаажуулаагүй. Прокси нь платформын зөвшөөрөл, хязгаарлалтыг өөрчлөхгүй.</p>
+<h2>Сарын зардлаа тооцоолох</h2><p>Прокси дата эсвэл IP түрээс, сервер, цахилгаан болон интернетийн зардал тусдаа. Өөрийн компьютер ашиглавал серверийн түрээсийг $0 гэж тооцож болно.</p>
+<form id="proxy-budget" class="proxy-options" onsubmit="return false">
+<label>Төлбөрийн төрөл<select id="budget-model"><option value="traffic">Дата хэмжээгээр</option><option value="fixed">Тогтмол сарын багц</option></select></label>
+<label><span id="budget-rate-label">Прокси үнэ ($ / GB)</span><input id="budget-rate" type="number" min="0" max="100000" step="0.01" value="4" required></label>
+<label id="budget-gb-label">Сарын дата (GB)<input id="budget-gb" type="number" min="0" max="100000" step="0.1" value="10" required></label>
+<label>Сервер ($ / сар)<input id="budget-server" type="number" min="0" max="100000" step="0.01" value="0" required></label>
+<label>Бусад зардал ($ / сар)<input id="budget-other" type="number" min="0" max="100000" step="0.01" value="0" required></label>
+</form><p id="budget-result" class="cost-price" role="status" aria-live="polite"></p><p id="budget-formula"></p>
+<p>Төсвийн жишээ: 10 GB × $4 = $40. Татвар, дата хэтрэлт ороогүй. Энэ нь нэхэмжлэх биш; багцын үнээ гараар өөрчилнө үү.</p></section>
 <section id="reports-panel" class="hero" hidden aria-labelledby="reports-title"><h1 id="reports-title">Reports</h1><p>Хяналтын системийн тайлангууд энд харагдана. Одоогоор тайлан алга.</p></section>
 <section id="accounts-panel" hidden><h1>Бүртгэлийн ноорог</h1><p>200 үүсгэсэн нэр, богино монгол танилцуулга. Бодит Facebook бүртгэлтэй холбогдоогүй.</p><div class="bar"><input id="draft-search" aria-label="Ноорог хайх" placeholder="Нэрээр хайх"><button id="draft-import" class="primary">Локал санд оруулах</button></div><p id="draft-count"></p><div id="draft-grid" class="draft-grid"></div><div class="bar"><button id="draft-prev">Өмнөх</button><button id="draft-next">Дараах</button></div></section>
 <p id="platform-notice" role="status"></p>
@@ -150,5 +170,21 @@ if(token.startsWith('__LOCAL_')) {
  $('connection').textContent='Компьютер дээр START-WINDOWS.cmd файлыг ажиллуулаад http://127.0.0.1:4173 хаягийг нээнэ үү. Энэ сайт нь локал үйлчилгээг орлохгүй.';
  for(const id of ['add','seed','bios','export','import','browser']) $(id).disabled=true;
 } else {refresh();setInterval(refresh,3000);}
-</script><script src="group-import.js"></script><script src="catalog-data.js"></script><script src="platform.js"></script><script src="catalog.js"></script></html>
+</script><script src="group-import.js"></script><script src="catalog-data.js"></script><script src="platform.js"></script><script src="catalog.js"></script><script>(function(){
+function budget(){
+const fixed=document.getElementById('budget-model').value==='fixed';
+document.getElementById('budget-gb-label').hidden=fixed;
+document.getElementById('budget-gb').disabled=fixed;
+document.getElementById('budget-rate-label').textContent=fixed?'Прокси багц ($ / сар)':'Прокси үнэ ($ / GB)';
+const inputs=['budget-rate','budget-gb','budget-server','budget-other'].map(id=>document.getElementById(id));
+const valid=inputs.every(e=>e.disabled||e.checkValidity());
+const [rate,gb,server,other]=inputs.map(e=>Number(e.value)),total=(fixed?rate:rate*gb)+server+other;
+document.getElementById('budget-result').textContent=valid&&Number.isFinite(total)?'Төсөв: $'+total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' / сар':'Зөв, сөрөг бус тоо оруулна уу.';
+document.getElementById('budget-formula').textContent=valid?(fixed?'Сарын прокси багц + сервер + бусад зардал':'GB × $ / GB + сервер + бусад зардал'):'';
+}
+document.getElementById('proxy-budget').addEventListener('input',budget);
+document.getElementById('budget-model').addEventListener('change',budget);
+document.getElementById('open-proxy-budget').onclick=()=>changeSection('proxies');
+budget();
+})();</script></html>
 
