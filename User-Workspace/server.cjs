@@ -25,6 +25,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
     function json(code,data) {res.writeHead(code,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify(data));}
     try {
       const pathname=new URL(req.url,'http://'+host).pathname;
+      if(req.method==='GET' && pathname==='/one-pager.html') {res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..','one-pager.html'),'utf8'));}
       if(req.method==='GET' && pathname==='/') {
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
         return res.end(fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
