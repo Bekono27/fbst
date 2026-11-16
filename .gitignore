@@ -2,3 +2,9 @@ node_modules/
 **/data/
 **/test-results/
 **/playwright-report/
+**/data-online/
+.env
+.env.*
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

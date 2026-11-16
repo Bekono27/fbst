@@ -5,10 +5,15 @@ const {randomBytes}=require('node:crypto');
 const {openDatabase}=require('./database.cjs');
 const {Engine}=require('./engine.cjs');
 const {roster}=require('./roster.cjs');
+const {groupStore}=require('./groups.cjs');
+const {createSync}=require('./sync.cjs');
 function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
   fs.mkdirSync(directory,{recursive:true});
   const store=openDatabase(path.join(directory,'workforce.sqlite'));
   const engine=new Engine(store,directory,chromium);
+  const groups=groupStore(store.db);
+  const sync=createSync(directory,()=>({pages:store.list(),groups:groups.list(),bios:store.bios()}));
+
   const token=randomBytes(32).toString('hex');
   const server=http.createServer(async(req,res)=>{
     res.setHeader('Cache-Control','no-store');
@@ -22,14 +27,19 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
         return res.end(fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
       }
+      if(req.method==='GET'&&['/platform.js','/group-import.js'].includes(pathname)){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..',pathname.slice(1))));}
       if(!pathname.startsWith('/api/')) return json(404,{error:'Олдсонгүй.'});
       if(req.headers['x-workforce-token']!==token || (req.headers.origin && req.headers.origin!=='http://'+host)) return json(403,{error:'Холболтын эрхгүй.'});
-      if(req.method==='GET' && pathname==='/api/state') return json(200,{pages:store.list(),bios:store.bios(),busy:engine.busy,active:engine.active,browser:!!engine.context});
+      if(req.method==='GET' && pathname==='/api/state') return json(200,{pages:store.list(),bios:store.bios(),busy:engine.busy,active:engine.active,browser:!!engine.context,groups:groups.list(),sync:sync.status()});
       let raw='';
       for await(const chunk of req) {raw+=chunk;if(raw.length>1000000) throw Error('Файл хэт том байна.');}
       const body=raw?JSON.parse(raw):{};
       if(req.method!=='POST') return json(405,{error:'Дэмжигдээгүй үйлдэл.'});
       switch(pathname) {
+        case '/api/groups/save': return json(200,groups.save(body));
+        case '/api/groups/import': return json(200,groups.importRows(body.records));
+        case '/api/sync/configure': return json(200,sync.configure(body));
+        case '/api/sync/run': return json(200,await sync.send(true));
         case '/api/roster': return json(200,{count:store.importRecords(roster(body.portfolio,body.categories,store.bios()))});
         case '/api/import': return json(200,{count:store.importRecords(body.records)});
         case '/api/save': return json(200,store.save(body));
@@ -47,6 +57,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
       }
     } catch(error) {json(400,{error:error.message});}
   });
+  server.on('close',()=>sync.close());
   server.on('error',error=>{
     console.error(error.code === 'EADDRINUSE'
       ? '4173 порт ашиглагдаж байна. Өмнөх Workforce цонхоо шалгана уу.'

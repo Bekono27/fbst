@@ -66,7 +66,7 @@ function openDatabase(filename) {
     if (current.page_id && current.page_id !== value) throw Error('Энэ бүртгэл өөр хуудасны дугаартай холбогдсон байна.');
     const other = list().find(row => row.page_id === value && row.id !== id);
     if (other) throw Error('Энэ дугаар өөр бүртгэлд байна.');
-    return state(id,'complete','Хуудасны дугаар хадгалагдлаа.',{page_id:value,url});
+    return state(id,'complete','Хуудасны дугаар хадгалагдлаа.',{page_id:value,url:url||'https://www.facebook.com/'+value});
   }
   function importRecords(records) {
     if (!Array.isArray(records) || records.length > 10000) throw Error('Бүртгэлийн жагсаалтаа шалгана уу.');

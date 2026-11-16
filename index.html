@@ -6,6 +6,8 @@
 </style>
 <header>AURANT</header>
 <main>
+<nav class="bar" aria-label="Үндсэн хэсгүүд"><button data-tab="pages" class="primary">Хуудсууд</button><button data-tab="public">Нээлттэй бүлгүүд</button><button data-tab="private">Хаалттай бүлгүүд</button><button data-tab="sync">Онлайн холболт</button></nav>
+<div id="page-panel">
 <section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
 <p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
 <p>Meta хөтөч нээгээд нэг удаа нэвтэрнэ үү. Нэвтрэлт энэ компьютер дээр хадгалагдана. Дараа нь зөв бизнесийн багцаа сонгож, «Manage Pages» цэсийг харагдуулна уу. Бүртгэлд тухайн багцын нэрийг яг адил бичнэ.</p>
@@ -14,7 +16,13 @@
 <input id="search" placeholder="Нэр, багц эсвэл дугаараар хайх" aria-label="Хайх">
 <p id="notice" role="status"></p>
 <div class="table"><table><thead><tr><th>Нэр / танилцуулга</th><th>Бизнесийн багц</th><th>Төлөв</th><th>Хуудасны дугаар</th><th>Үйлдэл</th></tr></thead><tbody id="rows"></tbody></table></div>
+</div>
+<section id="group-panel" hidden><h1 id="group-title">Бүлгүүд</h1><p>Холбоос, гишүүдийн тоо болон тэмдэглэлээ нэг дор хадгална.</p><div class="bar"><button id="group-add" class="primary">Бүлэг нэмэх</button><button id="group-import">Файл оруулах</button><button id="group-export">JSON татах</button><input id="group-file" type="file" accept=".csv,.tsv,.json" hidden></div><input id="group-search" placeholder="Нэр, холбоос, тэмдэглэлээр хайх" aria-label="Бүлэг хайх"><p id="group-count"></p><div class="table"><table><thead><tr><th>Нэр / холбоос</th><th>Гишүүд</th><th>Тэмдэглэл</th><th>Шинэчилсэн</th><th>Үйлдэл</th></tr></thead><tbody id="group-rows"></tbody></table></div></section>
+<section id="sync-panel" hidden><h1>Онлайн холболт</h1><p>Локал бүртгэл нь үндсэн эх сурвалж. Хуудасны дугаар, холбоос, танилцуулга болон бүлгүүдийг хамгаалалттай серверт хуулна. Facebook нэвтрэлтийн мэдээллийг дамжуулахгүй.</p><p id="sync-status" role="status"></p><form id="sync-form"><label>Онлайн серверийн HTTPS хаяг<input name="endpoint" type="url" required placeholder="https://your-server.example"></label><label id="sync-key-label">Холболтын түлхүүр<input name="key" type="password" required minlength="32" autocomplete="off"></label><button class="primary">Холбох</button></form><div class="bar"><button id="sync-now">Одоо синк хийх</button><button id="sync-refresh">Онлайн мэдээлэл шинэчлэх</button></div><p>Онлайн серверийг эхлээд байршуулна. Түлхүүрээ GitHub, CSV болон чатад оруулахгүй. Локал төхөөрөмж 10 секунд тутам өөрчлөлтөө илгээнэ. Сайт дээр унших түлхүүрээр мэдээллээ харна.</p></section>
+<p id="platform-notice" role="status"></p>
 </main>
+<dialog id="group-dialog"><form id="group-form"><h2>Бүлгийн мэдээлэл</h2><label>Нэр<input name="name" required maxlength="200"></label><label>Facebook бүлгийн холбоос<input name="url" type="url" required></label><label>Төрөл<select name="privacy"><option value="public">Нээлттэй</option><option value="private">Хаалттай</option></select></label><label>Гишүүдийн тоо<input name="members" type="number" min="0" step="1"></label><label>Тэмдэглэл<textarea name="notes" maxlength="5000"></textarea></label><div class="bar"><button class="primary">Хадгалах</button><button type="button" data-close="group-dialog">Болих</button></div></form></dialog>
+<dialog id="mapping-dialog"><form id="mapping-form"><h2>Импортын багана сонгох</h2><p>Хувийн эсэх нь файлд байхгүй бол одоогийн хэсгийн төрлийг ашиглана. Давхардсан холбоосыг алгасана.</p><div id="mapping-fields"></div><p id="mapping-preview"></p><div class="bar"><button class="primary">Шалгаж оруулах</button><button type="button" data-close="mapping-dialog">Болих</button></div></form></dialog>
 <dialog id="roster-dialog"><form id="roster-form"><h2>Нэр, танилцуулгын жагсаалт</h2>
 <label>Бизнесийн багцын нэр<input name="portfolio" required placeholder="Aurant 3"></label>
 <label>Тохирох ангиллууд<textarea name="categories" required></textarea></label>
@@ -47,6 +55,7 @@ function cell(row,value){const node=row.insertCell();node.textContent=value;retu
 function button(parent,text,action,disabled=false){const b=document.createElement('button');b.textContent=text;b.disabled=disabled;b.onclick=()=>run(action);parent.append(b);}
 async function run(action){try{await action();await refresh();}catch(error){notice(error.message);}}
 function render(){
+ window.dispatchEvent(new Event('aurant-state'));
  const query=$('search').value.toLowerCase();
  $('rows').replaceChildren();
  const pages=state.pages.filter(p=>[p.name,p.portfolio,p.page_id].join(' ').toLowerCase().includes(query));
@@ -54,7 +63,11 @@ function render(){
   const row=$('rows').insertRow(), first=cell(row,p.name), bio=document.createElement('small');bio.textContent=p.bio;first.append(bio);
   cell(row,p.portfolio);const status=cell(row,names[p.status]||p.status);
   const message=document.createElement('small');message.textContent=p.message;status.append(message);
-  cell(row,p.page_id||'—');const actions=cell(row,'');actions.className='actions';
+  const idCell=cell(row,p.page_id||'—');
+  if(p.url&&/^https:\/\/([a-z0-9-]+\.)*facebook\.com\//i.test(p.url)){const a=document.createElement('a');a.href=p.url;a.textContent='Хуудас нээх';a.target='_blank';a.rel='noopener noreferrer';idCell.append(document.createElement('br'),a);}
+  const updated=document.createElement('small');updated.textContent=new Date(p.updated_at).toLocaleString('mn-MN');idCell.append(updated);
+  const actions=cell(row,'');actions.className='actions';
+  if(token.startsWith('__LOCAL_')) continue;
   const locked=state.busy||['review','opening','filling','submitting'].includes(p.status);
   button(actions,'Засах',()=>openEditor(p),locked);
   if(['draft','failed'].includes(p.status)) button(actions,'Хуудас үүсгэх',async()=>{
@@ -69,7 +82,7 @@ function render(){
   button(actions,'Дугаар оруулах',()=>{recording=p.id;$('id-form').elements.pageId.value=p.page_id||'';$('id-form').elements.url.value=p.url||'';$('id-dialog').showModal();},state.busy);
  }
  if(!pages.length){const c=$('rows').insertRow().insertCell();c.colSpan=5;c.textContent='Бүртгэл алга. Бодит хуудасны мэдээллээ нэмнэ үү.';}
- $('browser').disabled=state.busy;
+ $('browser').disabled=!connected||state.busy;
 }
 async function refresh(){
  try{
@@ -126,4 +139,5 @@ if(token.startsWith('__LOCAL_')) {
  $('connection').textContent='Компьютер дээр START-WINDOWS.cmd файлыг ажиллуулаад http://127.0.0.1:4173 хаягийг нээнэ үү. Энэ сайт нь локал үйлчилгээг орлохгүй.';
  for(const id of ['add','seed','bios','export','import','browser']) $(id).disabled=true;
 } else {refresh();setInterval(refresh,3000);}
-</script></html>
+</script><script src="group-import.js"></script><script src="platform.js"></script></html>
+

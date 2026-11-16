@@ -11,3 +11,9 @@ Manual setup from the repository root: `npm run setup`, then `npm start`. Tests:
 The public website displays launch instructions. The database and browser engine run locally; GitHub Pages cannot run Node.js or Facebook browser automation. Keep `User-Workspace/data` when updating. Never upload its database or browser session.
 
 See `User-Workspace/README.md` for engine instructions. Live Facebook Page creation remains unverified.
+
+## Pages, groups and online records
+
+Public and private group directories support CSV, TSV and JSON import with column mapping, validation and duplicate detection. Page records show their captured ID, link and last update.
+
+For the authenticated online mirror, backend deployment instructions and limitations, see [ONLINE-SETUP.md](ONLINE-SETUP.md). The backend must be hosted and connected before online sync works. Local records remain the source of truth; online access is read-only.
