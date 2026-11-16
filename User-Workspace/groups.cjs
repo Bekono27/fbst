@@ -4,7 +4,7 @@ function groupStore(db){
  const list=()=>db.prepare('SELECT * FROM groups ORDER BY updated_at DESC').all();
  function normalize(data){
   const name=String(data.name||'').trim(),privacy=String(data.privacy||'').toLowerCase();
-  if(!name||name.length>200||!['public','private'].includes(privacy))throw Error('Бүлгийн нэр, нээлттэй эсвэл хаалттай төрлийг шалгана уу.');
+  if(!name||name.length>200||!['public','private','unknown'].includes(privacy))throw Error('Бүлгийн нэр, нээлттэй эсвэл хаалттай төрлийг шалгана уу.');
   let u;try{u=new URL(data.url);}catch{throw Error('Бүлгийн холбоос буруу байна.');}
   const slug=u.pathname.match(/^\/groups\/([a-zA-Z0-9._-]+)\/?$/)?.[1];
   if(u.protocol!=='https:'||!['facebook.com','www.facebook.com','m.facebook.com'].includes(u.hostname)||!slug)throw Error('https://www.facebook.com/groups/… холбоос оруулна уу.');

@@ -27,7 +27,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
         return res.end(fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
       }
-      if(req.method==='GET'&&['/platform.js','/group-import.js'].includes(pathname)){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..',pathname.slice(1))));}
+      if(req.method==='GET'&&['/platform.js','/group-import.js','/catalog-data.js','/catalog.js'].includes(pathname)){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..',pathname.slice(1))));}
       if(!pathname.startsWith('/api/')) return json(404,{error:'Олдсонгүй.'});
       if(req.headers['x-workforce-token']!==token || (req.headers.origin && req.headers.origin!=='http://'+host)) return json(403,{error:'Холболтын эрхгүй.'});
       if(req.method==='GET' && pathname==='/api/state') return json(200,{pages:store.list(),bios:store.bios(),busy:engine.busy,active:engine.active,browser:!!engine.context,groups:groups.list(),sync:sync.status()});

@@ -4,17 +4,17 @@ const tell=message=>$('platform-notice').textContent=message;
 async function perform(fn){document.querySelectorAll('.platform-error').forEach(e=>e.remove());try{await fn();}catch(e){tell(e.message);const dialog=document.querySelector('dialog[open]');if(dialog){const p=document.createElement('p');p.className='platform-error';p.setAttribute('role','alert');p.textContent=e.message;dialog.prepend(p);}}}
 function downloadJSON(rows,name){const u=URL.createObjectURL(new Blob([JSON.stringify(rows,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function groupRender(){
- const groups=state.groups||[],q=$('group-search').value.toLowerCase();
- $('group-title').textContent=section==='private'?'Хаалттай бүлгүүд':'Нээлттэй бүлгүүд';
- const rows=groups.filter(g=>g.privacy===section&&[g.name,g.url,g.notes].join(' ').toLowerCase().includes(q));
+ const combined=new Map((window.AurantCatalog?.groups||[]).map(g=>[g.url.toLowerCase(),g]));for(const g of state.groups||[])combined.set(g.url.toLowerCase(),g);const groups=[...combined.values()],q=$('group-search').value.toLowerCase();
+ $('group-title').textContent=section==='private'?'Хаалттай бүлгүүд':section==='unknown'?'Бүлгийн лавлах · Баталгаажаагүй':'Нээлттэй бүлгүүд';
+ const rows=groups.filter(g=>g.privacy===section&&(!$('group-region').value||(g.region||g.notes)===$('group-region').value)&&[g.name,g.url,g.notes].join(' ').toLowerCase().includes(q));
  $('group-count').textContent=rows.length+' бүлэг';$('group-rows').replaceChildren();
- for(const g of rows){const tr=$('group-rows').insertRow(),first=cell(tr,g.name),a=document.createElement('a');a.textContent=g.url;if(/^https:\/\/(www\.)?facebook\.com\/groups\//i.test(g.url))a.href=g.url;a.target='_blank';a.rel='noopener noreferrer';first.append(document.createElement('br'),a);cell(tr,g.members??'—');cell(tr,g.notes||'—');cell(tr,new Date(g.updated_at).toLocaleString('mn-MN'));const actions=cell(tr,'');if(isLocal)button(actions,'Засах',()=>editGroup(g));}
+ for(const g of rows){const tr=$('group-rows').insertRow(),first=cell(tr,g.name),a=document.createElement('a');a.textContent=g.url;if(/^https:\/\/(www\.)?facebook\.com\/groups\//i.test(g.url))a.href=g.url;a.target='_blank';a.rel='noopener noreferrer';first.append(document.createElement('br'),a);cell(tr,g.members??'—');cell(tr,g.notes||'—');cell(tr,g.updated_at?new Date(g.updated_at).toLocaleString('mn-MN'):'Эх файлаас');const actions=cell(tr,'');if(isLocal&&!g.source_row)button(actions,'Засах',()=>editGroup(g));}
  if(!rows.length){const c=$('group-rows').insertRow().insertCell();c.colSpan=5;c.textContent='Бүлэг алга. Файлаас мэдээлэл оруулна уу.';}
  $('group-add').disabled=$('group-import').disabled=!isLocal||!connected;
  const sync=state.sync||{};$('sync-status').textContent=isLocal?(sync.configured?(sync.lastError|| (sync.working?'Синк хийж байна.':sync.lastSuccess?'Сүүлийн синк: '+new Date(sync.lastSuccess).toLocaleString('mn-MN'):'Сервер холбогдсон. Эхний синк хүлээгдэж байна.')):'Онлайн сервер хараахан холбогдоогүй.'):online?'Онлайн мэдээлэл уншиж байна.':'Онлайн серверийн хаяг болон унших түлхүүрээр холбогдоно уу.';
  $('sync-now').hidden=!isLocal;$('sync-refresh').hidden=isLocal;
 }
-function changeSection(next){section=next;$('page-panel').hidden=next!=='pages';$('group-panel').hidden=!['public','private'].includes(next);$('sync-panel').hidden=next!=='sync';for(const name of ['automation','proxies','reports'])$(name+'-panel').hidden=next!==name;for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('primary',b.dataset.tab===next);groupRender();}
+function changeSection(next){section=next;$('page-panel').hidden=next!=='pages';$('group-panel').hidden=!['public','private','unknown'].includes(next);$('sync-panel').hidden=next!=='sync';for(const name of ['automation','proxies','reports','accounts'])$(name+'-panel').hidden=next!==name;for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('primary',b.dataset.tab===next);groupRender();}
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>changeSection(b.dataset.tab);
 window.addEventListener('aurant-state',groupRender);$('group-search').oninput=groupRender;
 function editGroup(g){groupEdit=g?.id||null;const f=$('group-form');f.reset();for(const k of ['name','url','members','notes'])f.elements[k].value=g?.[k]??'';f.elements.privacy.value=g?.privacy||section;$('group-dialog').showModal();}
