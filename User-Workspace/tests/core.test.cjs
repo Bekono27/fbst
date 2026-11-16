@@ -107,3 +107,41 @@ test('reuses its dedicated browser and recovers a closed tab',async()=>{
  engine.page={isClosed:()=>true};engine.context={pages:()=>[recovered]};
  await engine.browser();assert.equal(engine.page,recovered);
 });
+test('import keeps unresolved creation records under review',()=>{
+ const store=openDatabase(':memory:');
+ store.importRecords([{...sample,status:'submitting'},{...sample,name:'Дууссан бүртгэл',status:'complete'}]);
+ assert(store.list().every(row=>row.status==='review'));
+ store.db.close();
+});
+test('ID capture rejects inconsistent links and relinking',()=>{
+ const store=openDatabase(':memory:'),row=store.save(sample);
+ assert.throws(()=>store.capture(row.id,'123','https://www.facebook.com/456'));
+ store.capture(row.id,'123','https://www.facebook.com/123');
+ assert.throws(()=>store.capture(row.id,'456','https://www.facebook.com/456'));
+ assert.equal(store.get(row.id).page_id,'123');
+ assert.equal(pageIdFromURL('http://facebook.com/123'),'');
+ store.db.close();
+});
+test('ID collector checks links after Done and handles duplicate names',async()=>{
+ const store=openDatabase(':memory:'),row=store.save(sample);
+ let done=false;
+ let ids=['123'];
+ const wait={first(){return this;},or(){return this;},waitFor:async()=>{}};
+ const page={
+  url:()=> 'https://business.facebook.com/latest?business_id=555',
+  locator:()=>({innerText:async()=>sample.name}),
+  getByRole(role){
+   if(role==='button') return {isVisible:async()=>!done,click:async()=>{done=true;}};
+   if(role==='heading') return {filter(){return this;},count:async()=>0};
+   return {...wait,all:async()=>done?ids.map(id=>({isVisible:async()=>true,getAttribute:async()=> 'https://www.facebook.com/'+id})):[]};
+  }
+ };
+ const engine=new Engine(store,'unused');engine.page=page;
+ await engine.collect(row.id);
+ assert.equal(store.get(row.id).page_id,'123');
+ const second=store.save({...sample,name:'Өөр нэр'});ids=['444','777'];
+ await engine.collect(second.id);
+ assert.equal(store.get(second.id).status,'review');
+ assert.equal(store.get(second.id).page_id,null);
+ store.db.close();
+});

@@ -7,7 +7,7 @@ function validBio(bio) {
 function pageIdFromURL(value) {
   try {
     const url = new URL(value);
-    if (!/(^|\.)facebook\.com$/.test(url.hostname)) return '';
+    if (url.protocol !== 'https:' || !/(^|\.)facebook\.com$/.test(url.hostname)) return '';
     const id = url.searchParams.get('asset_id') || url.searchParams.get('page_id') || (url.pathname === '/profile.php' ? url.searchParams.get('id') : null);
     if (id && /^\d+$/.test(id)) return id;
     return url.pathname.match(/^\/(\d+)\/?$/)?.[1] || '';
@@ -59,6 +59,11 @@ function openDatabase(filename) {
   function capture(id,value,url='') {
     if (!/^\d+$/.test(value)) throw Error('Хуудасны дугаар зөвхөн цифрээс бүрдэнэ.');
     if (url && !/^https:\/\/([a-z0-9-]+\.)*facebook\.com\//i.test(url)) throw Error('Facebook холбоос оруулна уу.');
+    const urlId = url && pageIdFromURL(url);
+    if (urlId && urlId !== value) throw Error('Холбоос дахь дугаар оруулсан дугаартай таарахгүй байна.');
+    const current = get(id);
+    if (!current) throw Error('Бүртгэл олдсонгүй.');
+    if (current.page_id && current.page_id !== value) throw Error('Энэ бүртгэл өөр хуудасны дугаартай холбогдсон байна.');
     const other = list().find(row => row.page_id === value && row.id !== id);
     if (other) throw Error('Энэ дугаар өөр бүртгэлд байна.');
     return state(id,'complete','Хуудасны дугаар хадгалагдлаа.',{page_id:value,url});
@@ -72,6 +77,9 @@ function openDatabase(filename) {
         if (list().some(row => row.name === record.name && row.portfolio === record.portfolio)) continue;
         const created=save({...record,id:undefined});
         if (record.page_id) capture(created.id,String(record.page_id),record.url || '');
+        else if (record.status && !['draft','failed'].includes(record.status)) {
+          state(created.id,'review','Импортолсон бүртгэлийн өмнөх үүсгэлтийг Meta дээр шалгана уу.');
+        }
         count++;
       }
       db.exec('COMMIT');

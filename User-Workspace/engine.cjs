@@ -40,8 +40,8 @@ class Engine {
     if(this.busy) throw Error('Өөр ажиллагаа явагдаж байна.');
     const row = this.store.get(id);
     if(!row || !['draft','failed'].includes(row.status) || row.page_id) throw Error('Энэ бүртгэлийг дахин үүсгэх боломжгүй. Төлөвийг шалгана уу.');
-    this.busy=true; this.active=id;
     this.store.state(id,'opening','Meta хөтөч нээж байна.');
+    this.busy=true; this.active=id;
     this.task=this.create(row).finally(()=>{this.busy=false;this.active=null;});
     return this.store.get(id);
   }
@@ -93,22 +93,32 @@ class Engine {
   async collect(id) {
     await this.guard();
     const row=this.store.get(id);
-    // Only a URL paired with this Page's exact visible name is eligible.
+    const done=this.page.getByRole('button',{name:/^Done$|^Дуусгах$/});
+    if(await done.isVisible()) await done.click();
+    // The completion screen may navigate before revealing Page links.
+    await this.page.getByRole('link',{name:row.name,exact:true})
+      .or(this.page.getByRole('heading',{name:row.name,exact:true}))
+      .first().waitFor({state:'visible',timeout:10000}).catch(()=>{});
+    const candidates = new Map();
     const links = this.page.getByRole('link',{name:row.name,exact:true});
     for (const link of await links.all()) {
+      if (!(await link.isVisible())) continue;
       const raw = await link.getAttribute('href');
       if(!raw) continue;
       const url = new URL(raw,this.page.url()).href;
       const pageId=pageIdFromURL(url);
-      if(pageId) return this.store.capture(id,pageId,url);
+      if(pageId) candidates.set(pageId,url);
     }
-    const done=this.page.getByRole('button',{name:/^Done$|^Дуусгах$/});
-    if(await done.isVisible()) await done.click();
-    const heading=this.page.getByRole('heading',{name:row.name,exact:true});
+    const heading=this.page.getByRole('heading',{name:row.name,exact:true}).filter({visible:true});
     if(await heading.count()) {
       const pageId=pageIdFromURL(this.page.url());
-      if(pageId) return this.store.capture(id,pageId,this.page.url());
+      if(pageId) candidates.set(pageId,this.page.url());
     }
+    if(candidates.size === 1) {
+      const [pageId,url] = candidates.entries().next().value;
+      return this.store.capture(id,pageId,url);
+    }
+    if(candidates.size > 1) return this.store.state(id,'review','Ижил нэртэй олон хуудас байна. Зөв хуудасны дугаарыг шалгаж оруулна уу.');
     return this.store.state(id,'review','Хуудасны дугаар хараахан олдсонгүй. Meta дээр хуудсаа нээгээд дугаар татах товчийг дарна уу.');
   }
   async capture(id) {

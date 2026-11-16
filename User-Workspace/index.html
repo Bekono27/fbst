@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="mn"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Аурант — Бүртгэлийн удирдлага</title>
+<title>AURANT</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#20221f;color:#eeeee6;font:15px system-ui,sans-serif}header{padding:20px 5vw;border-bottom:1px solid #42453d;letter-spacing:.1em;background:#181b17}main{max-width:1240px;margin:auto;padding:32px 20px}h1{font-size:clamp(30px,5vw,48px);margin:0 0 10px;letter-spacing:-.04em}.hero{background:linear-gradient(120deg,#282d25,#53564e);padding:32px;border-radius:18px;border:1px solid #5b6053}.hero p{max-width:800px;line-height:1.6;color:#d2d7c9}.bar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}button,input,select,textarea{font:inherit;color:#eeeee6;background:#30352c;border:1px solid #666f5b;border-radius:8px;padding:11px}button{cursor:pointer}button:hover{background:#48513e}button.primary{background:#c7d3af;color:#202719}button:disabled{opacity:.45;cursor:wait}label{display:grid;gap:7px;margin:13px 0}input,textarea{width:100%}textarea{min-height:90px}.table{overflow:auto;background:#2b3027;border:1px solid #4b5543;border-radius:12px}table{border-collapse:collapse;width:100%;min-width:850px}td,th{padding:14px;text-align:left;border-bottom:1px solid #464e3e}th{color:#cad4bd;background:#353c2e}small{display:block;margin-top:5px;color:#bac6ac;max-width:340px}dialog{background:#262b23;color:#eeeee6;border:1px solid #69775b;border-radius:15px;width:min(620px,95vw);max-height:90vh}dialog::backdrop{background:#111a}#notice{min-height:25px;color:#dce6c9}#search{max-width:420px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:13px;padding:8px}a{color:#d1e5b4}:focus-visible{outline:3px solid #bdd29f;outline-offset:3px}[hidden]{display:none!important}
+*{box-sizing:border-box}body{margin:0;background:#0b1324;color:#f1f3fa;font:15px system-ui,sans-serif}header{font-weight:700;padding:20px 5vw;border-bottom:1px solid #263650;letter-spacing:.1em;background:#0d182d}main{max-width:1240px;margin:auto;padding:32px 20px}h1{font-size:clamp(30px,5vw,48px);margin:0 0 10px;letter-spacing:-.04em}.hero{background:linear-gradient(120deg,#132440,#24344b);padding:32px;border-radius:18px;border:1px solid #354762}.hero p{max-width:800px;line-height:1.6;color:#bec9dc}.bar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}button,input,select,textarea{font:inherit;color:#f1f3fa;background:#16243b;border:1px solid #455875;border-radius:8px;padding:11px}button{cursor:pointer}button:hover{background:#263956}button.primary{background:#ad2442;color:#ffffff}button.primary:hover{background:#c63152}button:disabled{opacity:.45;cursor:wait}label{display:grid;gap:7px;margin:13px 0}input,textarea{width:100%}textarea{min-height:90px}.table{overflow:auto;background:#101f35;border:1px solid #2e405c;border-radius:12px}table{border-collapse:collapse;width:100%;min-width:850px}td,th{padding:14px;text-align:left;border-bottom:1px solid #2a3a54}th{color:#c7d4ea;background:#192c47}small{display:block;margin-top:5px;color:#adbed8;max-width:340px}dialog{background:#112038;color:#f1f3fa;border:1px solid #425a7c;border-radius:15px;width:min(620px,95vw);max-height:90vh}dialog::backdrop{background:#050b16dc}#notice{min-height:25px;color:#e4c4ce}#search{max-width:420px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:13px;padding:8px}a{color:#f5acbf}:focus-visible{outline:3px solid #ed819c;outline-offset:3px}[hidden]{display:none!important}
 </style>
-<header>АУРАНТ / АЖИЛЛАХ ОРЧИН</header>
+<header>AURANT</header>
 <main>
 <section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
 <p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
@@ -75,7 +75,7 @@ async function refresh(){
  try{
   state=await api('state');connected=true;
   $('connection').textContent=state.busy?'Ажиллагаа явагдаж байна.':state.browser?'Meta хөтөч нээлттэй. Нэвтрэлт болон сонгосон багцаа шалгана уу.':'Компьютерийн мэдээллийн сантай холбогдлоо.';
-  for(const id of ['add','seed','bios','export','import','browser']) $(id).disabled=false;
+  for(const id of ['add','seed','bios','export','import']) $(id).disabled=false;
   render();
  }catch{
   connected=false;
