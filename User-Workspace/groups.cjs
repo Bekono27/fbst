@@ -1,6 +1,8 @@
 const {randomUUID}=require('node:crypto');
 function groupStore(db){
  db.exec(`CREATE TABLE IF NOT EXISTS groups(id TEXT PRIMARY KEY,name TEXT NOT NULL,url TEXT NOT NULL UNIQUE,group_id TEXT NOT NULL,privacy TEXT NOT NULL,members INTEGER,notes TEXT NOT NULL,updated_at TEXT NOT NULL);`);
+ const columns=db.prepare('PRAGMA table_info(groups)').all().map(c=>c.name);
+ for(const column of ['region','source'])if(!columns.includes(column))db.exec("ALTER TABLE groups ADD COLUMN "+column+" TEXT NOT NULL DEFAULT ''");
  const list=()=>db.prepare('SELECT * FROM groups ORDER BY updated_at DESC').all();
  function normalize(data){
   const name=String(data.name||'').trim(),privacy=String(data.privacy||'').toLowerCase();
@@ -11,7 +13,10 @@ function groupStore(db){
   const members=data.members===''||data.members==null?null:Number(data.members);
   if(members!==null&&(!Number.isSafeInteger(members)||members<0))throw Error('Гишүүдийн тоо бүхэл тоо байна.');
   const notes=String(data.notes||'').trim();if(notes.length>5000)throw Error('Тэмдэглэл хэт урт байна.');
-  return {name,privacy,url:'https://www.facebook.com/groups/'+slug+'/',group_id:/^\d+$/.test(slug)?slug:'',members,notes};
+  const region=String(data.region||'').trim(),source=String(data.source||'').trim();
+  if(region.length>120||source.length>200)throw Error('Бүс эсвэл эх сурвалжийн нэр хэт урт.');
+  if(data.kind&&data.kind!=='group')throw Error('Энэ хэсэг зөвхөн Facebook бүлэг хүлээн авна.');
+  return {region,source,name,privacy,url:'https://www.facebook.com/groups/'+slug+'/',group_id:/^\d+$/.test(slug)?slug:'',members,notes};
  }
  function save(data){
   const g=normalize(data),old=data.id&&db.prepare('SELECT id FROM groups WHERE id=?').get(data.id);
@@ -19,7 +24,7 @@ function groupStore(db){
   const existing=db.prepare('SELECT id FROM groups WHERE url=?').get(g.url);
   if(existing&&existing.id!==data.id)throw Error('Энэ бүлэг бүртгэлтэй байна.');
   const id=data.id||randomUUID();
-  db.prepare(`INSERT INTO groups VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,url=excluded.url,group_id=excluded.group_id,privacy=excluded.privacy,members=excluded.members,notes=excluded.notes,updated_at=excluded.updated_at`).run(id,g.name,g.url,g.group_id,g.privacy,g.members,g.notes,new Date().toISOString());
+  db.prepare(`INSERT INTO groups(id,name,url,group_id,privacy,members,notes,updated_at,region,source) VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,url=excluded.url,group_id=excluded.group_id,privacy=excluded.privacy,members=excluded.members,notes=excluded.notes,updated_at=excluded.updated_at,region=excluded.region,source=excluded.source`).run(id,g.name,g.url,g.group_id,g.privacy,g.members,g.notes,new Date().toISOString(),g.region,g.source);
   return list().find(g=>g.id===id);
  }
  function importRows(rows){

@@ -14,7 +14,7 @@ function publicRecords(snapshot) {
  id:String(p.page_id),page_id:String(p.page_id),name:p.name,bio:p.bio,status:'complete',
  url:'https://www.facebook.com/'+p.page_id,updated_at:p.updated_at
  })),groups:(snapshot.groups||[]).filter(g=>g.privacy==='public'&&/^https:\/\/www\.facebook\.com\/groups\/[\w.-]+\/$/.test(g.url)).map(g=>({
- id:g.id,name:g.name,url:g.url,group_id:g.group_id,privacy:'public',members:g.members,updated_at:g.updated_at
+ id:g.id,name:g.name,url:g.url,group_id:g.group_id,privacy:'public',region:g.region||'',source:g.source||'',members:g.members,updated_at:g.updated_at
  }))};
 }
 function mergeRecords(remote,incoming) {

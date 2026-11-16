@@ -31,7 +31,7 @@ function start({port=4173,directory=path.join(__dirname,'data'),chromium}={}) {
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
         return res.end(fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace('__LOCAL_TOKEN__',token));
       }
-      if(req.method==='GET'&&['/platform.js','/group-import.js','/catalog-data.js','/catalog.js'].includes(pathname)){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..',pathname.slice(1))));}
+      if(req.method==='GET'&&['/platform.js','/group-tools.js','/group-import.js','/catalog-data.js','/catalog.js'].includes(pathname)){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});return res.end(fs.readFileSync(path.join(__dirname,'..',pathname.slice(1))));}
       if(pathname.startsWith('/api/extension/')) {
         if(!(engine instanceof ExtensionEngine))return json(400,{error:'Extension mode unavailable.'});
         const origin=req.headers.origin,extension=req.headers['x-aurant-extension'];
