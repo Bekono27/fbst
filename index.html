@@ -5,10 +5,10 @@
 *{box-sizing:border-box}body{margin:0;background:#0b1324;color:#f1f3fa;font:15px system-ui,sans-serif}header{font-weight:700;padding:20px 5vw;border-bottom:1px solid #263650;letter-spacing:.1em;background:#0d182d}main{max-width:1240px;margin:auto;padding:32px 20px}h1{font-size:clamp(30px,5vw,48px);margin:0 0 10px;letter-spacing:-.04em}.hero{background:linear-gradient(120deg,#132440,#24344b);padding:32px;border-radius:18px;border:1px solid #354762}.hero p{max-width:800px;line-height:1.6;color:#bec9dc}.bar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}button,input,select,textarea{font:inherit;color:#f1f3fa;background:#16243b;border:1px solid #455875;border-radius:8px;padding:11px}button{cursor:pointer}button:hover{background:#263956}button.primary{background:#ad2442;color:#ffffff}button.primary:hover{background:#c63152}button:disabled{opacity:.45;cursor:not-allowed}label{display:grid;gap:7px;margin:13px 0}input,textarea{width:100%}textarea{min-height:90px}.table{overflow:auto;background:#101f35;border:1px solid #2e405c;border-radius:12px}table{border-collapse:collapse;width:100%;min-width:850px}td,th{padding:14px;text-align:left;border-bottom:1px solid #2a3a54}th{color:#c7d4ea;background:#192c47}small{display:block;margin-top:5px;color:#adbed8;max-width:340px}dialog{background:#112038;color:#f1f3fa;border:1px solid #425a7c;border-radius:15px;width:min(620px,95vw);max-height:90vh}dialog::backdrop{background:#050b16dc}#notice{min-height:25px;color:#e4c4ce}#search{max-width:420px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:13px;padding:8px}a{color:#f5acbf}:focus-visible{outline:3px solid #ed819c;outline-offset:3px}[hidden]{display:none!important}
 .draft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}.draft-card{padding:22px;border:1px solid #354762;border-radius:14px;background:#132440}.draft-card h2{font-size:20px;margin:0 0 12px}.draft-card p{color:#bec9dc}.draft-tag{color:#ed819c;font-size:12px}#draft-search{max-width:400px}#opening{position:fixed;inset:0;z-index:1000;background:radial-gradient(ellipse at 80% 20%,#571b35 0%,#101d34 45%,#070d19 100%);display:grid;place-items:center;padding:24px}#opening-skip{position:absolute;right:24px;top:24px}.opening-content{text-align:center;width:min(700px,100%)}.opening-wordmark{letter-spacing:.35em;margin-bottom:30px;font-size:20px}.opening-content h1{font-size:clamp(44px,9vw,96px)}.opening-slides{height:90px;position:relative}.opening-slides p{position:absolute;inset:0;display:grid;place-items:center;opacity:0;animation:opening-slide 1.667s ease both}.opening-slides p:nth-child(2){animation-delay:1.667s}.opening-slides p:nth-child(3){animation-delay:3.334s}.opening-progress{height:3px;background:#c63152;transform-origin:left;animation:opening-progress 5s linear forwards}@keyframes opening-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}@keyframes opening-slide{0%,100%{opacity:0;transform:translateY(8px)}15%,85%{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){#opening{display:none!important}}
 </style>
-<header>AURANT</header>
-<div id="opening" hidden role="dialog" aria-modal="true" aria-label="AURANT coming soon"><button id="opening-skip">Алгасах</button><div class="opening-content"><div class="opening-wordmark">AURANT</div><h1>Coming soon</h1><div class="opening-slides"><p>Хуудсууд ба бүртгэл</p><p>Бүлгүүдийн лавлах</p><p>Automation · Proxy Channels · Reports</p></div><div class="opening-progress"></div></div></div>
-<main>
-<nav class="bar" aria-label="Үндсэн хэсгүүд"><button data-tab="pages" class="primary">Хуудсууд</button><button data-tab="accounts">Бүртгэлийн ноорог</button><button data-tab="unknown">Бүлгийн лавлах</button><button data-tab="public">Нээлттэй бүлгүүд</button><button data-tab="private">Хаалттай бүлгүүд</button><button data-tab="automation">Automation</button><button data-tab="proxies">Proxy Channels</button><button data-tab="sync">Онлайн холболт</button></nav>
+<a class="skip-link" href="#workspace-content">Үндсэн хэсэг рүү</a><header class="app-header"><div class="brand-lockup"><span class="brand-mark">A</span><span>AURANT<small>Ажлын орчин</small></span></div><div class="header-context"><span id="workspace-mode" class="mode-pill">Вэб лавлах</span><a href="https://github.com/Bekono27/fbst/tree/main/chrome-extension" target="_blank" rel="noopener noreferrer">Extension ↗</a></div></header>
+<div id="opening" hidden role="dialog" aria-modal="true" aria-label="AURANT coming soon"><button id="opening-skip">Алгасах</button><div class="opening-content"><div class="opening-wordmark">AURANT</div><h1>Coming soon</h1><div class="opening-slides"><p>Хуудсууд ба бүртгэл</p><p>Бүлгүүдийн лавлах</p><p>Automation · Proxy Channels</p></div><div class="opening-progress"></div></div></div>
+<main id="workspace-content" tabindex="-1">
+<nav class="workspace-nav" aria-label="Үндсэн хэсгүүд"><span class="nav-caption">УДИРДЛАГА</span><button data-tab="pages" class="primary">Хуудсууд</button><button data-tab="accounts">Бүртгэлийн ноорог</button><span class="nav-caption">БҮЛГҮҮД</span><button data-tab="unknown">Бүлгийн лавлах</button><button data-tab="public">Нээлттэй бүлгүүд</button><button data-tab="private">Хаалттай бүлгүүд</button><span class="nav-caption">ХЭРЭГСЭЛ</span><button data-tab="automation">Automation</button><button data-tab="proxies">Proxy Channels</button><button data-tab="sync">Онлайн холболт</button></nav><div class="workspace-heading"><div><p class="eyebrow">AURANT / WORKSPACE</p><p id="workspace-location">Хуудсууд</p></div><span class="quiet-label">Нэг ажлын орчин</span></div>
 <div id="page-panel">
 <section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
 <p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
@@ -32,19 +32,19 @@
 <p id="group-count" role="status" aria-live="polite"></p><div class="table"><table><thead><tr><th>#</th><th>Нэр</th><th>Төрөл</th><th>Аймаг / дүүрэг</th><th>Гишүүд</th><th>Эх сурвалж</th><th>Холбоос</th><th>Үйлдэл</th></tr></thead><tbody id="group-rows"></tbody></table></div><div class="bar"><button id="group-prev">Өмнөх</button><button id="group-next">Дараах</button></div></section>
 <section id="sync-panel" hidden><h1>Онлайн холболт</h1><p>Локал бүртгэл нь үндсэн эх сурвалж. Хуудасны дугаар, холбоос, танилцуулга болон бүлгүүдийг хамгаалалттай серверт хуулна. Facebook нэвтрэлтийн мэдээллийг дамжуулахгүй.</p><p id="sync-status" role="status"></p><form id="sync-form"><label>Онлайн серверийн HTTPS хаяг<input name="endpoint" type="url" required placeholder="https://your-server.example"></label><label id="sync-key-label">Холболтын түлхүүр<input name="key" type="password" required minlength="32" autocomplete="off"></label><button class="primary">Холбох</button></form><div class="bar"><button id="sync-now">Одоо синк хийх</button><button id="sync-refresh">Онлайн мэдээлэл шинэчлэх</button></div><p>Онлайн серверийг эхлээд байршуулна. Түлхүүрээ GitHub, CSV болон чатад оруулахгүй. Локал төхөөрөмж 10 секунд тутам өөрчлөлтөө илгээнэ. Сайт дээр унших түлхүүрээр мэдээллээ харна.</p></section>
 <section id="automation-panel" class="hero" hidden aria-labelledby="automation-title">
-<h1 id="automation-title">Automation</h1><p>Постын үйлдлийн төлөвлөгөө</p>
+<div class="section-heading"><h1 id="automation-title">Automation</h1><span class="mode-pill pending">Төлөвлөлт</span></div><p>Постын үйлдлийн төлөвлөгөө</p>
 <p>Тохиргоо энэ хөтөч дээр хадгалагдана. Like, Share, Comment хөдөлгүүр холбогдоогүй тул хадгалах нь Facebook дээр үйлдэл эхлүүлэхгүй.</p>
-<form id="engagement-form"><div class="proxy-options">
+<form id="engagement-form"><h2 class="form-heading">01 · Пост ба хуваарь</h2><div class="proxy-options">
 <label>Post ID<input name="postId" required maxlength="200" pattern="[A-Za-z0-9_]+" placeholder="123456789 эсвэл pageID_postID"></label>
 <label>Эхлэх огноо, цаг<input name="startAt" type="datetime-local" required></label>
 <label>Үйлдэл хоорондын зай (секунд)<input name="interval" type="number" min="1" max="86400" step="1" value="60" required></label>
-<label>Like тоо<input name="likes" type="number" min="0" max="1000000" step="1" value="0" required></label>
+</div><h2 class="form-heading">02 · Үйлдлийн тоо</h2><div class="proxy-options"><label>Like тоо<input name="likes" type="number" min="0" max="1000000" step="1" value="0" required></label>
 <label>Share тоо<input name="shares" type="number" min="0" max="1000000" step="1" value="0" required></label>
 <label>Comment тоо<input name="comments" type="number" min="0" max="1000000" step="1" value="0" required></label>
-</div><label>Сэтгэгдлийн текстүүд · мөр бүрт нэг<textarea name="texts" maxlength="10000" rows="4" placeholder="Сэтгэгдлүүдээ оруулна уу"></textarea></label>
+</div><h2 class="form-heading">03 · Сэтгэгдлийн агуулга</h2><label>Сэтгэгдлийн текстүүд · мөр бүрт нэг<textarea name="texts" maxlength="10000" rows="4" placeholder="Сэтгэгдлүүдээ оруулна уу"></textarea></label>
 <p id="engagement-zone"></p><div class="bar"><button type="submit" class="primary">Төлөвлөгөө хадгалах</button><button type="button" id="engagement-clear">Шинэ төлөвлөгөө</button><button type="button" disabled>Эхлүүлэх · удахгүй</button><button type="button" id="open-proxy-budget">Зардал тооцоолох</button></div></form>
 <p id="engagement-notice" role="status" aria-live="polite"></p>
-<div class="table"><table><thead><tr><th>Post ID</th><th>Эхлэх цаг</th><th>Зай</th><th>Like / Share / Comment</th><th>Төлөв</th><th>Үйлдэл</th></tr></thead><tbody id="engagement-rows"></tbody></table></div></section>
+<h2 class="form-heading">Хадгалсан төлөвлөгөө</h2><div class="table"><table><thead><tr><th>Post ID</th><th>Эхлэх цаг</th><th>Зай</th><th>Like / Share / Comment</th><th>Төлөв</th><th>Үйлдэл</th></tr></thead><tbody id="engagement-rows"></tbody></table></div></section>
 <section id="proxies-panel" class="hero" hidden aria-labelledby="proxies-title"><h1 id="proxies-title">Proxy Channels</h1>
 <p><a href="one-pager.html" target="_blank" rel="noopener">AURANT · Нэг хуудас танилцуулга ↗</a></p>
 <article class="proxy-option"><h2>Нийтэд нээлттэй прокси жагсаалт</h2>
@@ -237,5 +237,68 @@ if(p.comments>0&&!p.texts)throw Error('Сэтгэгдлийн текстээ о�
 const next=editing?plans.map(x=>x.id===editing?p:x):[p,...plans];persist(next);reset();notice.textContent='Ноорог хадгаллаа. Facebook дээр үйлдэл хийгээгүй.';
 }catch(e){notice.textContent=e.message;}};
 document.getElementById('engagement-clear').onclick=reset;render();
-})();</script></html>
+})();</script><style id="workspace-clean-layer">
+:root{--canvas:#0d1522;--surface:#121e2e;--raised:#182639;--border:#2a384b;--muted:#a7b5c8;--accent:#b52c4e}
+body{background:var(--canvas);color:#edf1f7;font-size:14px;line-height:1.55}
+.app-header{height:76px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;background:#101a28;border-bottom:1px solid var(--border);letter-spacing:0}
+.brand-lockup{display:flex;align-items:center;gap:12px;letter-spacing:.15em;font-size:15px}
+.brand-lockup small{font-size:11px;letter-spacing:.02em;color:var(--muted);font-weight:400;margin:0}
+.brand-mark{display:grid;place-items:center;background:#ad2442;width:32px;height:32px;border-radius:8px;color:white;font-size:18px;letter-spacing:0}
+.header-context{display:flex;align-items:center;gap:20px;font-size:12px;font-weight:500}
+.header-context a{color:var(--muted);text-decoration:none}
+main{max-width:1600px;margin:0 auto 0 226px;padding:26px 32px 60px}
+.workspace-nav{position:fixed;left:0;top:76px;bottom:0;width:226px;display:flex;flex-direction:column;gap:4px;margin:0;padding:22px 14px;background:#101a28;border-right:1px solid var(--border);overflow-y:auto}
+.workspace-nav button{text-align:left;border:1px solid transparent;background:transparent;padding:10px 13px;border-radius:7px;color:#b6c2d3;font-size:13px;min-height:40px}
+.workspace-nav button:hover{background:#1a283b;color:white}
+.workspace-nav button.primary{background:#322232;border-color:#623148;color:#fff}
+.nav-caption{font-size:10px;font-weight:700;letter-spacing:.12em;color:#7f91aa;padding:18px 13px 7px}
+.nav-caption:first-child{padding-top:0}
+.workspace-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.workspace-heading p{margin:0}.eyebrow{font-size:10px;letter-spacing:.14em;color:#8495ad}
+#workspace-location{font-size:14px;font-weight:600;margin-top:5px}.quiet-label{font-size:11px;color:#8495ad}
+h1{font-size:clamp(24px,3vw,32px);line-height:1.2;letter-spacing:-.025em;margin:0 0 12px}
+h2{font-size:18px;letter-spacing:-.015em}
+.hero{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px}
+.hero p,section>p{color:var(--muted);max-width:900px;line-height:1.65}
+section{min-width:0}.bar{gap:8px;margin:18px 0;align-items:end}
+button,input,select,textarea{border-radius:7px;padding:10px 12px;background:var(--surface);border-color:#3a4b62;font-size:13px;min-height:40px}
+button{font-weight:550;transition:background .12s}button.primary{background:var(--accent);border-color:var(--accent)}
+button:disabled{opacity:.52}label{font-size:12px;color:#c2cede;gap:8px;margin:0 0 14px}
+input,select,textarea{color:#edf1f7}input::placeholder,textarea::placeholder{color:#8495ad}
+input:focus,select:focus,textarea:focus{border-color:#cb617d}
+select{max-width:100%}.table{border-color:var(--border);border-radius:9px;background:var(--surface)}
+th{font-size:11px;letter-spacing:.025em;font-weight:650;white-space:nowrap;background:#1a293d;color:#b6c6dc;padding:12px 14px}
+td{padding:13px 14px;font-size:13px;border-bottom:1px solid #253348;vertical-align:top}
+tbody tr:hover{background:#19273a}tbody tr:last-child td{border-bottom:0}
+td a{color:#bdcfea;text-underline-offset:3px}td button{padding:7px 10px;min-height:32px;font-size:12px;margin:2px}
+#group-panel>.bar:nth-of-type(2){display:grid;grid-template-columns:minmax(220px,2fr) repeat(3,minmax(130px,1fr));align-items:center}
+#group-panel>.bar:nth-of-type(3){padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:9px}
+#group-panel>.bar label{margin:0;flex:1;min-width:140px}
+#group-source{font-size:12px;color:#8fa1ba}#group-count,#draft-count{font-size:12px;color:#b5c4d8}
+.proxy-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.proxy-option{background:#142135;border:1px solid var(--border);padding:20px;border-radius:9px}
+.proxy-option h2{font-size:15px}.cost-price{font-size:24px;letter-spacing:-.02em}
+.draft-grid{gap:12px}.draft-card{background:var(--surface);border-color:var(--border);border-radius:9px;padding:20px}
+.draft-card h2{font-size:17px;margin:10px 0}.draft-card p{font-size:13px;margin-bottom:0}.draft-tag{font-size:10px;color:#d58ba0;letter-spacing:.04em}
+.section-heading{display:flex;align-items:center;gap:14px;margin-bottom:10px}.section-heading h1{margin:0}
+.mode-pill{display:inline-flex;align-items:center;padding:4px 9px;border-radius:5px;border:1px solid #3a4b62;color:#bfccde;font-size:11px;white-space:nowrap;background:#172437}
+.mode-pill.pending{color:#edc38a;border-color:#65523b;background:#2b2723}
+.form-heading{font-size:12px;font-weight:650;color:#cfdae8;padding-top:24px;margin:20px 0 14px;border-top:1px solid var(--border)}
+#engagement-form .proxy-options{grid-template-columns:repeat(3,minmax(0,1fr));margin:14px 0}
+#engagement-zone{font-size:12px}.hero #engagement-form>label{max-width:100%}
+#sync-panel{max-width:850px}#sync-form{background:var(--surface);padding:24px;border:1px solid var(--border);border-radius:10px}
+dialog{padding:26px;border-radius:12px;background:#142135;border-color:#435772}dialog h2{margin-top:0}dialog label{margin:16px 0}
+details{border-top:1px solid var(--border);padding-top:14px;font-size:12px;color:var(--muted)}summary{cursor:pointer;color:#d1dbea}
+#notice:empty,#platform-notice:empty{display:none}
+.skip-link{position:fixed;top:-100px;left:16px;z-index:2000;background:white;color:#102138;padding:12px}.skip-link:focus{top:12px}
+@media(min-width:1900px){main{margin-left:calc(226px + (100vw - 1900px)/2)}}
+@media(max-width:1050px){main{margin-left:196px;padding:24px}.workspace-nav{width:196px}#group-panel>.bar:nth-of-type(2){grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.app-header{height:66px;padding:0 16px}.header-context{gap:10px}.brand-lockup{font-size:13px}
+main{margin:0;padding:16px}.workspace-nav{position:relative;inset:auto;width:auto;margin:-16px -16px 20px;padding:10px 16px;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--border);gap:6px}.workspace-nav button{white-space:nowrap;flex:none;min-height:42px}.nav-caption{display:none}
+.workspace-heading{margin-bottom:20px}.quiet-label{display:none}.hero{padding:20px}.hero h1{font-size:25px}
+#engagement-form .proxy-options{grid-template-columns:1fr}.proxy-options{grid-template-columns:1fr}#group-panel>.bar:nth-of-type(2){grid-template-columns:1fr}#group-panel>.bar:nth-of-type(3){align-items:stretch}#group-panel>.bar label{min-width:100%;flex:1}
+.bar>button{min-height:42px}.table{max-width:100%}.section-heading{flex-wrap:wrap}dialog{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style><script>(()=>{const nav=document.querySelector('.workspace-nav');function update(){const active=nav.querySelector('button.primary');document.getElementById('workspace-location').textContent=active?.textContent||'Ажлын орчин';nav.querySelectorAll('button').forEach(b=>{if(b===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});document.getElementById('workspace-mode').textContent=typeof isLocal!=='undefined'&&isLocal?'Локал орчин':'Вэб лавлах';}new MutationObserver(update).observe(nav,{subtree:true,attributes:true,attributeFilter:['class']});update();})();</script></html>
 
