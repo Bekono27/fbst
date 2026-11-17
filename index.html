@@ -73,14 +73,15 @@
 </main>
 <dialog id="group-dialog"><form id="group-form"><h2>Бүлгийн мэдээлэл</h2><label>Нэр<input name="name" required maxlength="200"></label><label>Facebook бүлгийн холбоос<input name="url" type="url" required></label><label>Төрөл<select name="privacy"><option value="unknown">Баталгаажаагүй</option><option value="public">Нээлттэй</option><option value="private">Хаалттай</option></select></label><label>Гишүүдийн тоо<input name="members" type="number" min="0" step="1"></label><label>Аймаг / дүүрэг<input name="region" maxlength="120" placeholder="Архангай / Хан-Уул / Улс"></label><label>Эх сурвалж<input name="source" maxlength="200"></label><label>Тэмдэглэл<textarea name="notes" maxlength="5000"></textarea></label><div class="bar"><button class="primary">Хадгалах</button><button type="button" data-close="group-dialog">Болих</button></div></form></dialog>
 <dialog id="mapping-dialog"><form id="mapping-form"><h2>Импортын багана сонгох</h2><p>Хувийн эсэх нь файлд байхгүй бол одоогийн хэсгийн төрлийг ашиглана. Давхардсан холбоосыг алгасана.</p><div id="mapping-fields"></div><p id="mapping-preview"></p><div class="bar"><button class="primary">Шалгаж оруулах</button><button type="button" data-close="mapping-dialog">Болих</button></div></form></dialog>
+<datalist id="business-portfolio-names"><option value="officialcomit"></option><option value="Aurant 3"></option><option value="Aurant Business acc 1"></option><option value="Aurant Business acc 2"></option><option value="Бека Бектас"></option></datalist>
 <dialog id="roster-dialog"><form id="roster-form"><h2>Нэр, танилцуулгын жагсаалт</h2>
-<label>Бизнесийн багцын нэр<input name="portfolio" required placeholder="Aurant 3"></label>
+<label>Бизнесийн багцын нэр<input name="portfolio" list="business-portfolio-names" required placeholder="Багцын нэр сонгох" autocomplete="off"><small>Meta дээрх багцын бүтэн нэрийг сонгоно. Aurant 1 / Aurant 2 биш: Aurant Business acc 1 / Aurant Business acc 2.</small></label>
 <label>Тохирох ангиллууд<textarea name="categories" required></textarea></label>
 <small>Кирилл, латин, холимог болон богино нэртэй 200 ноорог нэмнэ. Танилцуулгын сангаас 3–8 үгтэй өгүүлбэр сонгоно. Давхардсан нэрийг тухайн багцад дахин нэмэхгүй.</small>
 <div class="bar"><button class="primary">Жагсаалт нэмэх</button><button type="button" data-close="roster-dialog">Болих</button></div></form></dialog>
 <dialog id="editor"><form id="form"><h2>Бүртгэлийн мэдээлэл</h2>
 <label>Хуудасны нэр<input name="name" maxlength="100" required></label>
-<label>Бизнесийн багцын нэр<input name="portfolio" required placeholder="Aurant 3"></label>
+<label>Бизнесийн багцын нэр<input name="portfolio" list="business-portfolio-names" required placeholder="Багцын нэр сонгох" autocomplete="off"><small>Meta дээрх багцын бүтэн нэрийг сонгоно. Aurant 1 / Aurant 2 биш: Aurant Business acc 1 / Aurant Business acc 2.</small></label>
 <label>Тохирох ангиллууд<textarea name="categories" required placeholder="Meta дээрх ангиллын нэрийг мөр бүрд оруулна уу."></textarea></label>
 <small>Систем энэ жагсаалтаас нэг ангиллыг санамсаргүй сонгоно. Meta дээрх нэртэй таарах ёстой.</small>
 <label>Танилцуулга<textarea name="bio" maxlength="100" required></textarea></label>
