@@ -8,7 +8,7 @@
 <header>AURANT</header>
 <div id="opening" hidden role="dialog" aria-modal="true" aria-label="AURANT coming soon"><button id="opening-skip">Алгасах</button><div class="opening-content"><div class="opening-wordmark">AURANT</div><h1>Coming soon</h1><div class="opening-slides"><p>Хуудсууд ба бүртгэл</p><p>Бүлгүүдийн лавлах</p><p>Automation · Proxy Channels · Reports</p></div><div class="opening-progress"></div></div></div>
 <main>
-<nav class="bar" aria-label="Үндсэн хэсгүүд"><button data-tab="pages" class="primary">Хуудсууд</button><button data-tab="accounts">Бүртгэлийн ноорог</button><button data-tab="unknown">Бүлгийн лавлах</button><button data-tab="public">Нээлттэй бүлгүүд</button><button data-tab="private">Хаалттай бүлгүүд</button><button data-tab="automation">Automation</button><button data-tab="proxies">Proxy Channels</button><button data-tab="reports">Reports</button><button data-tab="sync">Онлайн холболт</button></nav>
+<nav class="bar" aria-label="Үндсэн хэсгүүд"><button data-tab="pages" class="primary">Хуудсууд</button><button data-tab="accounts">Бүртгэлийн ноорог</button><button data-tab="unknown">Бүлгийн лавлах</button><button data-tab="public">Нээлттэй бүлгүүд</button><button data-tab="private">Хаалттай бүлгүүд</button><button data-tab="automation">Automation</button><button data-tab="proxies">Proxy Channels</button><button data-tab="sync">Онлайн холболт</button></nav>
 <div id="page-panel">
 <section class="hero"><h1>Бүртгэл ба хуудасны удирдлага</h1>
 <p id="connection">Компьютерийн үйлчилгээнд холбогдож байна.</p>
@@ -32,19 +32,19 @@
 <p id="group-count" role="status" aria-live="polite"></p><div class="table"><table><thead><tr><th>#</th><th>Нэр</th><th>Төрөл</th><th>Аймаг / дүүрэг</th><th>Гишүүд</th><th>Эх сурвалж</th><th>Холбоос</th><th>Үйлдэл</th></tr></thead><tbody id="group-rows"></tbody></table></div><div class="bar"><button id="group-prev">Өмнөх</button><button id="group-next">Дараах</button></div></section>
 <section id="sync-panel" hidden><h1>Онлайн холболт</h1><p>Локал бүртгэл нь үндсэн эх сурвалж. Хуудасны дугаар, холбоос, танилцуулга болон бүлгүүдийг хамгаалалттай серверт хуулна. Facebook нэвтрэлтийн мэдээллийг дамжуулахгүй.</p><p id="sync-status" role="status"></p><form id="sync-form"><label>Онлайн серверийн HTTPS хаяг<input name="endpoint" type="url" required placeholder="https://your-server.example"></label><label id="sync-key-label">Холболтын түлхүүр<input name="key" type="password" required minlength="32" autocomplete="off"></label><button class="primary">Холбох</button></form><div class="bar"><button id="sync-now">Одоо синк хийх</button><button id="sync-refresh">Онлайн мэдээлэл шинэчлэх</button></div><p>Онлайн серверийг эхлээд байршуулна. Түлхүүрээ GitHub, CSV болон чатад оруулахгүй. Локал төхөөрөмж 10 секунд тутам өөрчлөлтөө илгээнэ. Сайт дээр унших түлхүүрээр мэдээллээ харна.</p></section>
 <section id="automation-panel" class="hero" hidden aria-labelledby="automation-title">
-<h1 id="automation-title">Automation</h1>
-<p>Үйлдлийн хяналтын систем дараа нэмэгдэнэ.</p>
-<div class="bar" aria-label="Automation actions"><button type="button" disabled aria-describedby="automation-placeholder">Like</button><button type="button" disabled aria-describedby="automation-placeholder">Comment</button><button type="button" disabled aria-describedby="automation-placeholder">Share</button></div>
-<p id="automation-placeholder">Like, Comment, Share хөгжүүлэлт хүлээгдэж байна. Төсөв тооцох нь үйлдлүүдийг идэвхжүүлэхгүй.</p>
-<h2>Үйлдлийн зардал ба төлөв</h2><div style="overflow-x:auto"><table><thead><tr><th>Үйлдэл</th><th>Төлөв</th><th>Зардал</th></tr></thead><tbody>
-<tr><td>Like / Comment / Share</td><td>Удахгүй</td><td>Нэг үйлдлийн үнэ тогтоогоогүй</td></tr>
-<tr><td>Page үүсгэх</td><td>Локал хөдөлгүүр · бодит ажиллагааны баталгаажуулалт хүлээгдэж байна</td><td>Дата + компьютер / серверийн зардал</td></tr>
-</tbody></table></div>
-<p>Нэг амжилттай үйлдлийн өртөг = тухайн ажлын дата ба ажиллуулах зардал ÷ амжилттай үйлдлийн тоо. Дахин оролдлого ч дата зарцуулна. Одоогоор хэмжилт байхгүй тул тогтмол нэгж үнэ амлахгүй.</p>
-<h2>Сарын төсвийн жишээ</h2><p>Decodo $4 / GB Pay As You Go: 1 GB → $4; 10 GB → $40; 25 GB → $100. Сервер, татвар болон бусад зардал нэмэгдэнэ. Эдгээр хэмжээ нь үйлдлийн тоог илэрхийлэхгүй.</p>
-<p><a href="https://decodo.com/proxies/residential-proxies/pricing" target="_blank" rel="noopener noreferrer">Үнийн эх сурвалж ↗</a> · 2026-11-17</p>
-<button type="button" id="open-proxy-budget">Прокси ба төсөв тооцоолох</button>
-</section>
+<h1 id="automation-title">Automation</h1><p>Постын үйлдлийн төлөвлөгөө</p>
+<p>Тохиргоо энэ хөтөч дээр хадгалагдана. Like, Share, Comment хөдөлгүүр холбогдоогүй тул хадгалах нь Facebook дээр үйлдэл эхлүүлэхгүй.</p>
+<form id="engagement-form"><div class="proxy-options">
+<label>Post ID<input name="postId" required maxlength="200" pattern="[A-Za-z0-9_]+" placeholder="123456789 эсвэл pageID_postID"></label>
+<label>Эхлэх огноо, цаг<input name="startAt" type="datetime-local" required></label>
+<label>Үйлдэл хоорондын зай (секунд)<input name="interval" type="number" min="1" max="86400" step="1" value="60" required></label>
+<label>Like тоо<input name="likes" type="number" min="0" max="1000000" step="1" value="0" required></label>
+<label>Share тоо<input name="shares" type="number" min="0" max="1000000" step="1" value="0" required></label>
+<label>Comment тоо<input name="comments" type="number" min="0" max="1000000" step="1" value="0" required></label>
+</div><label>Сэтгэгдлийн текстүүд · мөр бүрт нэг<textarea name="texts" maxlength="10000" rows="4" placeholder="Сэтгэгдлүүдээ оруулна уу"></textarea></label>
+<p id="engagement-zone"></p><div class="bar"><button type="submit" class="primary">Төлөвлөгөө хадгалах</button><button type="button" id="engagement-clear">Шинэ төлөвлөгөө</button><button type="button" disabled>Эхлүүлэх · удахгүй</button><button type="button" id="open-proxy-budget">Зардал тооцоолох</button></div></form>
+<p id="engagement-notice" role="status" aria-live="polite"></p>
+<div class="table"><table><thead><tr><th>Post ID</th><th>Эхлэх цаг</th><th>Зай</th><th>Like / Share / Comment</th><th>Төлөв</th><th>Үйлдэл</th></tr></thead><tbody id="engagement-rows"></tbody></table></div></section>
 <section id="proxies-panel" class="hero" hidden aria-labelledby="proxies-title"><h1 id="proxies-title">Proxy Channels</h1>
 <p><a href="one-pager.html" target="_blank" rel="noopener">AURANT · Нэг хуудас танилцуулга ↗</a></p>
 <article class="proxy-option"><h2>Нийтэд нээлттэй прокси жагсаалт</h2>
@@ -67,7 +67,7 @@
 <label>Бусад зардал ($ / сар)<input id="budget-other" type="number" min="0" max="100000" step="0.01" value="0" required></label>
 </form><p id="budget-result" class="cost-price" role="status" aria-live="polite"></p><p id="budget-formula"></p>
 <p>Төсвийн жишээ: 10 GB × $4 = $40. Татвар, дата хэтрэлт ороогүй. Энэ нь нэхэмжлэх биш; багцын үнээ гараар өөрчилнө үү.</p></section>
-<section id="reports-panel" class="hero" hidden aria-labelledby="reports-title"><h1 id="reports-title">Reports</h1><p>Хяналтын системийн тайлангууд энд харагдана. Одоогоор тайлан алга.</p></section>
+
 <section id="accounts-panel" hidden><h1>Бүртгэлийн ноорог</h1><p>200 үүсгэсэн нэр, богино монгол танилцуулга. Бодит Facebook бүртгэлтэй холбогдоогүй.</p><div class="bar"><input id="draft-search" aria-label="Ноорог хайх" placeholder="Нэрээр хайх"><button id="draft-import" class="primary">Локал санд оруулах</button></div><p id="draft-count"></p><div id="draft-grid" class="draft-grid"></div><div class="bar"><button id="draft-prev">Өмнөх</button><button id="draft-next">Дараах</button></div></section>
 <p id="platform-notice" role="status"></p>
 </main>
@@ -220,5 +220,22 @@ status.textContent=rows.length+' хаяг · Ачаалсан: '+new Date().toLo
 }catch{status.textContent='Жагсаалтыг ачаалж чадсангүй. Бүтэн TXT жагсаалтын холбоосыг ашиглана уу.';}
 finally{button.disabled=false;}
 };
+})();</script><script>(()=>{
+const key='aurant-engagement-plans-v1',form=document.getElementById('engagement-form'),body=document.getElementById('engagement-rows'),notice=document.getElementById('engagement-notice');let plans=[],editing=null;
+try{const data=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(data))plans=data.filter(p=>p&&typeof p.id==='string'&&typeof p.postId==='string'&&Number.isFinite(Date.parse(p.startAt)));}catch{notice.textContent='Хадгалсан мэдээллийг уншиж чадсангүй.';}
+document.getElementById('engagement-zone').textContent='Цагийн бүс: '+Intl.DateTimeFormat().resolvedOptions().timeZone+'. Хадгалсан цаг нь төлөвлөгөө; автоматаар ажиллахгүй.';
+function persist(next){localStorage.setItem(key,JSON.stringify(next));plans=next;render();}
+function reset(){editing=null;form.reset();}
+function render(){body.replaceChildren();for(const p of plans){const tr=body.insertRow();for(const value of [p.postId,new Date(p.startAt).toLocaleString(),p.interval+' сек',p.likes+' / '+p.shares+' / '+p.comments,'Ноорог · хөдөлгүүр холбогдоогүй']){tr.insertCell().textContent=value;}
+const actions=tr.insertCell();for(const [label,fn] of [['Засах',()=>{editing=p.id;for(const k of ['postId','interval','likes','shares','comments','texts'])form.elements[k].value=p[k]??'';const d=new Date(p.startAt);form.elements.startAt.value=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);form.scrollIntoView({behavior:'smooth'});}],['Устгах',()=>{try{persist(plans.filter(x=>x.id!==p.id));if(editing===p.id)reset();}catch{notice.textContent='Устгасан өөрчлөлтийг хадгалж чадсангүй.';}}]]){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;actions.append(b);}}
+if(!plans.length){const c=body.insertRow().insertCell();c.colSpan=6;c.textContent='Төлөвлөгөө алга.';}}
+form.onsubmit=e=>{e.preventDefault();try{if(!form.reportValidity())return;const f=form.elements;
+const start=new Date(f.startAt.value);if(!Number.isFinite(start.getTime())||start.getTime()<=Date.now())throw Error('Ирээдүйн огноо, цаг сонгоно уу.');
+const p={id:editing||crypto.randomUUID(),postId:f.postId.value.trim(),startAt:start.toISOString(),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,interval:Number(f.interval.value),likes:Number(f.likes.value),shares:Number(f.shares.value),comments:Number(f.comments.value),texts:f.texts.value.trim(),status:'draft'};
+if(![p.likes,p.shares,p.comments].some(v=>v>0))throw Error('Дор хаяж нэг үйлдлийн тоог оруулна уу.');
+if(p.comments>0&&!p.texts)throw Error('Сэтгэгдлийн текстээ оруулна уу.');
+const next=editing?plans.map(x=>x.id===editing?p:x):[p,...plans];persist(next);reset();notice.textContent='Ноорог хадгаллаа. Facebook дээр үйлдэл хийгээгүй.';
+}catch(e){notice.textContent=e.message;}};
+document.getElementById('engagement-clear').onclick=reset;render();
 })();</script></html>
 

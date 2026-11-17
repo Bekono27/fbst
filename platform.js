@@ -50,7 +50,7 @@ function groupRender(){
  const sync=state.sync||{};$('sync-status').textContent=isLocal?(sync.configured?(sync.lastError|| (sync.working?'Синк хийж байна.':sync.lastSuccess?'Сүүлийн синк: '+new Date(sync.lastSuccess).toLocaleString('mn-MN'):'Сервер холбогдсон. Эхний синк хүлээгдэж байна.')):'Онлайн сервер хараахан холбогдоогүй.'):online?'Онлайн мэдээлэл уншиж байна.':'Онлайн серверийн хаяг болон унших түлхүүрээр холбогдоно уу.';
  $('sync-now').hidden=!isLocal;$('sync-refresh').hidden=isLocal;
 }
-function changeSection(next){section=next;$('page-panel').hidden=next!=='pages';$('group-panel').hidden=!['public','private','unknown'].includes(next);$('sync-panel').hidden=next!=='sync';for(const name of ['automation','proxies','reports','accounts'])$(name+'-panel').hidden=next!==name;for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('primary',b.dataset.tab===next);groupRender();}
+function changeSection(next){section=next;$('page-panel').hidden=next!=='pages';$('group-panel').hidden=!['public','private','unknown'].includes(next);$('sync-panel').hidden=next!=='sync';for(const name of ['automation','proxies','accounts'])$(name+'-panel').hidden=next!==name;for(const b of document.querySelectorAll('[data-tab]'))b.classList.toggle('primary',b.dataset.tab===next);groupRender();}
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>changeSection(b.dataset.tab);
 window.addEventListener('aurant-state',groupRender);$('group-search').oninput=groupRender;
 for(const id of ['group-region','group-source-filter','group-privacy-filter','group-min','group-max','group-sort'])$(id).oninput=groupRender;
