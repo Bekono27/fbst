@@ -5,7 +5,7 @@ async function perform(fn){document.querySelectorAll('.platform-error').forEach(
 function downloadJSON(rows,name){const u=URL.createObjectURL(new Blob([JSON.stringify(rows,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 let groupPage=0,groupSignature='',groupFiltered=[];
 function combinedGroups(){
- const combined=new Map((window.AurantCatalog?.groups||[]).map(g=>[g.url.toLowerCase(),{...g,source:g.source||'Эх spreadsheet'}]));
+ const combined=new Map((window.AurantCatalog?.groups||[]).map(g=>[g.url?g.url.toLowerCase():g.id,{...g,source:g.source||'Эх spreadsheet'}]));
  for(const g of state.groups||[])combined.set(g.url.toLowerCase(),{...combined.get(g.url.toLowerCase()),...g,region:g.region||combined.get(g.url.toLowerCase())?.region||'',source:g.source||'Локал бүртгэл'});
  return [...combined.values()].map(g=>({...g,region:GroupTools.region(g.region||''),source:g.source||'Тодорхойгүй'}));
 }
@@ -41,7 +41,11 @@ function groupRender(){
  const tr=$('group-rows').insertRow();cell(tr,String(groupPage*50+i+1));cell(tr,g.name);
  cell(tr,'Бүлэг · '+({public:'нээлттэй',private:'хаалттай',unknown:'тодорхойгүй'}[g.privacy]||'тодорхойгүй'));
  cell(tr,g.region);cell(tr,g.members==null?'—':Number(g.members).toLocaleString('en-US'));cell(tr,g.source);
- const linkCell=cell(tr,''),a=document.createElement('a');a.textContent='Нээх ↗';if(/^https:\/\/(www\.)?facebook\.com\/groups\//i.test(g.url))a.href=g.url;a.target='_blank';a.rel='noopener noreferrer';linkCell.append(a);
+ const linkCell=cell(tr,''),a=document.createElement('a');
+ if(/^https:\/\/(www\.)?facebook\.com\/groups\//i.test(g.url)){a.textContent='Нээх ↗';a.href=g.url;}
+ else if(/^https:\/\/www\.google\.com\/search\?/i.test(g.search_url||'')){a.textContent='Бүлэг хайх ↗';a.href=g.search_url;a.title='Шууд Facebook холбоос баталгаажаагүй';}
+ else a.textContent='Холбоос алга';
+ a.target='_blank';a.rel='noopener noreferrer';linkCell.append(a);
  const actions=cell(tr,'');if(isLocal&&connected&&(state.groups||[]).some(local=>local.id===g.id))button(actions,'Засах',()=>editGroup(g));
  }
  if(!rows.length){const c=$('group-rows').insertRow().insertCell();c.colSpan=8;c.textContent='Тохирох бүлэг алга.';}
@@ -90,3 +94,4 @@ if(!isLocal){
  }
  void readPublicRecords();setInterval(readPublicRecords,60000);
 }
+

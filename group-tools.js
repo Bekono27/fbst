@@ -17,9 +17,9 @@
  function bucket(value){const v=region(value);return provinces.includes(v)?'Аймаг':districts.includes(v)||v==='Улаанбаатар'?'Улаанбаатар ба дүүрэг':v==='Улсын хэмжээнд'?'Улсын хэмжээнд':v==='Тодорхойгүй'?'Тодорхойгүй':'Бусад бүс / сэдэв';}
  function members(value){if(value==null||String(value).trim()==='')return null;const s=String(value).trim().replace(/[,\s]/g,'');if(!/^\d+$/.test(s)||!Number.isSafeInteger(Number(s)))throw Error('Гишүүдийн тоо бүхэл тоо байх ёстой.');return Number(s);}
  function csv(rows){
-  const headers=['Name','Type','Region','Size','Source','Link','Privacy','Notes'];
+  const headers=['Name','Type','Region','Size','Source','Link','Privacy','Notes','Search URL'];
   const esc=v=>{let s=String(v??'');if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
-  return '\uFEFF'+[headers,...rows.map(g=>[g.name,'group',region(g.region),g.members,g.source||'',g.url,g.privacy,g.notes||''])].map(r=>r.map(esc).join(',')).join('\r\n');
+  return '\uFEFF'+[headers,...rows.map(g=>[g.name,'group',region(g.region),g.members,g.source||'',g.url,g.privacy,g.notes||'',g.search_url||''])].map(r=>r.map(esc).join(',')).join('\r\n');
  }
  const api={provinces,districts,region,bucket,members,csv};if(typeof module!=='undefined')module.exports=api;else root.GroupTools=api;
 })(typeof window!=='undefined'?window:globalThis);
